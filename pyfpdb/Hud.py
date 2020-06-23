@@ -24,6 +24,9 @@ Create and manage the hud overlays.
 ########################################################################
 # todo
  
+from builtins import str
+from builtins import range
+from builtins import object
 import L10n
 _ = L10n.get_translation()
 
@@ -53,7 +56,7 @@ def importName(module_name, name):
     return(getattr(module, name))
 
 
-class Hud:
+class Hud(object):
     def __init__(self, parent, table, max, poker_game, game_type, config):
 #    __init__ is (now) intended to be called from the stdin thread, so it
 #    must not touch the gui
@@ -147,7 +150,7 @@ class Hud:
         x_scale = 1.0 * self.table.width / self.layout.width
         y_scale = 1.0 * self.table.height / self.layout.height
         
-        for i in (range(1, self.max + 1)):
+        for i in (list(range(1, self.max + 1))):
             if self.layout.location[i]:
                 self.layout.location[i] = (
                 (int(self.layout.location[i][0] * x_scale)),

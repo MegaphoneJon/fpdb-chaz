@@ -18,6 +18,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from builtins import str
 import L10n
 _ = L10n.get_translation()
 
@@ -266,7 +267,7 @@ class SealsWithClubs(HandHistoryConverter):
 #    streets PREFLOP, PREDRAW, and THIRD are special cases beacause
 #    we need to grab hero's cards
         for street in ('PREFLOP', 'DEAL'):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 for found in m:
                     hand.hero = found.group('PNAME')

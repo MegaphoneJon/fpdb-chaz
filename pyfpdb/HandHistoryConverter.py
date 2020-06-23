@@ -15,6 +15,11 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from __future__ import print_function
+from __future__ import division
+from builtins import str
+from builtins import object
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -45,7 +50,7 @@ import Hand
 from Exceptions import *
 import Configuration
 
-class HandHistoryConverter():
+class HandHistoryConverter(object):
 
     READ_CHUNK_SIZE = 10000 # bytes to read at a time from file in tail mode
 
@@ -142,11 +147,11 @@ HandHistoryConverter: '%(sitename)s'
                 try:
                     self.processedHands.append(self.processHand(handText))
                     lastParsed = 'stored'
-                except FpdbHandPartial, e:
+                except FpdbHandPartial as e:
                     self.numPartial += 1
                     lastParsed = 'partial'
                     log.debug("%s" % e)
-                except FpdbHandSkipped, e:
+                except FpdbHandSkipped as e:
                     self.numSkipped += 1
                     lastParsed = 'skipped'
                 except FpdbParseError:
@@ -422,7 +427,7 @@ or None if we fail to get the info """
         if hand.rake < 0 and (not hand.roundPenny or hand.rake < round) and not hand.cashedOut:
             log.error(_("hhc.getRake(): '%s': Amount collected (%s) is greater than the pot (%s)") % (hand.handid,str(hand.totalcollected), str(hand.totalpot)))
             raise FpdbParseError
-        elif hand.totalpot > 0 and Decimal(hand.totalpot/4) < hand.rake and not hand.fastFold and not hand.cashedOut:
+        elif hand.totalpot > 0 and Decimal(old_div(hand.totalpot,4)) < hand.rake and not hand.fastFold and not hand.cashedOut:
             log.error(_("hhc.getRake(): '%s': Suspiciously high rake (%s) > 25 pct of pot (%s)") % (hand.handid,str(hand.rake), str(hand.totalpot)))
             raise FpdbParseError
 
@@ -646,7 +651,7 @@ or None if we fail to get the info """
             return givenTZ.localize(time)
 
         localisedTime = givenTZ.localize(time)
-        utcTime = localisedTime.astimezone(wantedTimezone) + datetime.timedelta(seconds=-3600*(offset/100)-60*(offset%100))
+        utcTime = localisedTime.astimezone(wantedTimezone) + datetime.timedelta(seconds=-3600*(old_div(offset,100))-60*(offset%100))
         #log.debug("utcTime: " + str(utcTime))
         return utcTime
     #end @staticmethod def changeTimezone

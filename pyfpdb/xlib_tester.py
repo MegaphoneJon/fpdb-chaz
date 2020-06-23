@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """Test program to see if XTables.py will correctly id the poker client.
 """
+from __future__ import print_function
 #    Copyright 2010-2011, Ray E. Barker
 
 #    This program is free software; you can redistribute it and/or modify
@@ -55,11 +56,11 @@ name_atom = disp.get_atom("WM_NAME", 1)
 def get_window_from_xid(id):
     for outside in root.query_tree().children:
         if outside.id == id:
-            print "matched outside"
+            print("matched outside")
             return outside
         for inside in outside.query_tree().children:
             if inside.id == id:
-                print "matched inside"
+                print("matched inside")
                 return inside
     return None
 
@@ -73,17 +74,17 @@ def get_window_title(xid):
 
 if __name__== "__main__":
 
-    print "enter table xid find (in hex): "
+    print("enter table xid find (in hex): ")
     xid = sys.stdin.readline()
 
-    print "Window information from xwininfo:"
+    print("Window information from xwininfo:")
     s = os.popen("xwininfo -children -id %d" % int(xid, 0)).read()
-    print "-------------------------------------------------------"
-    print s
-    print "-------------------------------------------------------\n\n"
+    print("-------------------------------------------------------")
+    print(s)
+    print("-------------------------------------------------------\n\n")
 
-    print "Window information from functions:"
+    print("Window information from functions:")
     window = get_window_from_xid(int(xid, 0))
-    print "window =", window, "title = \"" + get_window_title(int(xid, 0)) + "\"\n"
+    print("window =", window, "title = \"" + get_window_title(int(xid, 0)) + "\"\n")
 
-    print "parent =", window.query_tree().parent
+    print("parent =", window.query_tree().parent)

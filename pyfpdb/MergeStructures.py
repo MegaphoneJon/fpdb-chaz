@@ -19,10 +19,12 @@
 
 ########################################################################
 
+from builtins import range
+from builtins import object
 from datetime import datetime
 import pytz
 
-class MergeStructures:
+class MergeStructures(object):
     
     def __init__(self):
         self.versions = [pytz.utc.localize(datetime.strptime(d, "%Y/%m/%d %H:%M:%S")) for d in ("2013/05/28 00:00:00",)]

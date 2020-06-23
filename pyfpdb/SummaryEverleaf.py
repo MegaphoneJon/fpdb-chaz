@@ -16,12 +16,16 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
-import urllib, htmllib, formatter
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
+import urllib.request, urllib.parse, urllib.error, htmllib, formatter
 
-class AppURLopener(urllib.FancyURLopener):
+class AppURLopener(urllib.request.FancyURLopener):
     version = "Free Poker Database/0.12+"
 
-urllib._urlopener = AppURLopener()
+urllib.request._urlopener = AppURLopener()
 
 class SummaryParser(htmllib.HTMLParser): # derive new HTML parser
     def get_attr(self, attrs, key):
@@ -167,20 +171,20 @@ class SummaryParser(htmllib.HTMLParser): # derive new HTML parser
                     self.TempResultStore[self.TempResultPos] = x
                     self.TempResultPos += 1
 
-class EverleafSummary:
+class EverleafSummary(object):
     def __init__(self):
         if __name__ != "__main__":
             self.main()
             
     def main(self, id="785646"):
-        file = urllib.urlopen("http://www.poker4ever.com/en.tournaments.tournament-statistics?tid="+id)
+        file = urllib.request.urlopen("http://www.poker4ever.com/en.tournaments.tournament-statistics?tid="+id)
         self.parser = SummaryParser(formatter.NullFormatter())
         self.parser.feed(file.read())
-        print "site=",self.parser.SiteName, "tourneyname=", self.parser.TourneyName, "tourneyid=", self.parser.TourneyId
-        print "start time=",self.parser.TourneyStartTime, "end time=",self.parser.TourneyEndTime
-        print "structure=", self.parser.TourneyStructure, "game type=",self.parser.TourneyGameType
-        print "buy-in=", self.parser.TourneyBuyIn, "rebuys=", self.parser.TourneyRebuys, "total players=", self.parser.TourneysPlayers, "pool=", self.parser.TourneyPool
-        print "results=", self.parser.Results
+        print("site=",self.parser.SiteName, "tourneyname=", self.parser.TourneyName, "tourneyid=", self.parser.TourneyId)
+        print("start time=",self.parser.TourneyStartTime, "end time=",self.parser.TourneyEndTime)
+        print("structure=", self.parser.TourneyStructure, "game type=",self.parser.TourneyGameType)
+        print("buy-in=", self.parser.TourneyBuyIn, "rebuys=", self.parser.TourneyRebuys, "total players=", self.parser.TourneysPlayers, "pool=", self.parser.TourneyPool)
+        print("results=", self.parser.Results)
     
     
 if __name__ == "__main__":

@@ -15,6 +15,7 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from __future__ import print_function
 import PokerStarsToFpdb
 from Hand import *
 import py
@@ -101,7 +102,7 @@ def testFlopImport():
             """regression-test-files/cash/Stars/Flop/NLHE-6max-USD-0.05-0.10-200912.Allin-pre.txt""", site="PokerStars")
     importer.setCallHud(False)
     (stored, dups, partial, errs, ttime) = importer.runImport()
-    print "DEBUG: stored: %s dups: %s partial: %s errs: %s ttime: %s" %(stored, dups, partial, errs, ttime)
+    print("DEBUG: stored: %s dups: %s partial: %s errs: %s ttime: %s" %(stored, dups, partial, errs, ttime))
     importer.clearFileList()
 
     col = { 'sawShowdown': 2, 'street0Aggr':3
@@ -128,7 +129,7 @@ and s.id = p.siteid"""
     c.execute(q)
     result = c.fetchall()
     for row, data in enumerate(result):
-        print "DEBUG: result[%s]: %s" %(row, result[row])
+        print("DEBUG: result[%s]: %s" %(row, result[row]))
         # Assert if any sawShowdown = True
         assert result[row][col['sawShowdown']] == 0
 
@@ -154,7 +155,7 @@ and s.id = p.siteid"""
     result = c.fetchall()
     pstats = { u'Kinewma':0, u'Arbaz':0, u's0rrow':1, u'bys7':0, u'AAALISAAAA':1, u'Bl\xe5veis':0 }
     for row, data in enumerate(result):
-        print "DEBUG: result[%s]: %s == %s" %(row, result[row], pstats[data[1]])
+        print("DEBUG: result[%s]: %s == %s" %(row, result[row], pstats[data[1]]))
         assert result[row][col['sawShowdown']] == pstats[data[1]]
 
     assert 0 == 1

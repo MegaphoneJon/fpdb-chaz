@@ -19,6 +19,9 @@
 
 ########################################################################
 
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -200,7 +203,7 @@ class Everest(HandHistoryConverter):
         m = self.re_PlayerInfo.finditer(hand.handText)
         for a in m:
             stack = Decimal(a.group('CASH'))
-            stackstr = "%.2f" % float(stack/100)
+            stackstr = "%.2f" % float(old_div(stack,100))
             hand.addPlayer(a.group('SEAT'), a.group('PNAME'), stackstr)
 
     def markStreets(self, hand):
@@ -227,7 +230,7 @@ class Everest(HandHistoryConverter):
     def readAntes(self, hand):
         m = self.re_Antes.finditer(hand.handText)
         for player in m:
-            amount = "%.2f" % float(float(player.group('ANTE'))/100)
+            amount = "%.2f" % float(old_div(float(player.group('ANTE')),100))
             hand.addAnte(self.playerNameFromSeatNo(player.group('PSEAT'), hand), amount)
 
     def readBringIn(self, hand):
@@ -236,11 +239,11 @@ class Everest(HandHistoryConverter):
     def readBlinds(self, hand):
         i = 0
         for a in self.re_PostXB.finditer(hand.handText):
-            amount = "%.2f" % float(float(a.group('XB'))/100)
-            both = "%.2f" % (float(float(a.group('PENALTY'))/100) + float(float(a.group('XB'))/100))
-            if i==1 and Decimal(a.group('XB'))/100 == Decimal(hand.gametype['bb'])*2:
+            amount = "%.2f" % float(old_div(float(a.group('XB')),100))
+            both = "%.2f" % (float(old_div(float(a.group('PENALTY')),100)) + float(old_div(float(a.group('XB')),100)))
+            if i==1 and old_div(Decimal(a.group('XB')),100) == Decimal(hand.gametype['bb'])*2:
                 hand.gametype['sb'] = hand.gametype['bb']
-                hand.gametype['bb'] = str(Decimal(a.group('XB'))/100)
+                hand.gametype['bb'] = str(old_div(Decimal(a.group('XB')),100))
             if i==0:
                 hand.addBlind(self.playerNameFromSeatNo(a.group('PSEAT'), hand),'small blind', amount)
             elif i>0 and a.group('PENALTY')=='0':
@@ -270,7 +273,7 @@ class Everest(HandHistoryConverter):
             player = self.playerNameFromSeatNo(action.group('PSEAT'), hand)
             if action.group('ATYPE') == 'BET':
                 amount = Decimal(action.group('BET'))
-                amountstr = "%.2f" % float(amount/100)
+                amountstr = "%.2f" % float(old_div(amount,100))
                 #Gah! BET can mean check, bet, call or raise...
                 if action.group('BET') == '0':
                     hand.addCheck(street, player)
@@ -303,7 +306,7 @@ class Everest(HandHistoryConverter):
         for m in self.re_CollectPot.finditer(hand.handText):
             player = self.playerNameFromSeatNo(m.group('PSEAT'), hand)
             amount = Decimal(m.group('POT'))
-            amountstr = "%.2f" % float(amount/100)
+            amountstr = "%.2f" % float(old_div(amount,100))
             #print "DEBUG: %s collects %s" % (player, m.group('POT'))
             hand.addCollectPot(player, amountstr)
 

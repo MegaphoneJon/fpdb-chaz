@@ -40,6 +40,8 @@ Todo:
     replace hardcoded site list with something more subtle
 
 """
+from builtins import str
+from builtins import object
 import platform
 import os
 import sys
@@ -51,7 +53,7 @@ if platform.system() == 'Windows':
     PROGRAM_FILES = winpaths.get_program_files()
     LOCAL_APPDATA = winpaths.get_local_appdata()
 
-class DetectInstalledSites():
+class DetectInstalledSites(object):
 
     def __init__(self, sitename = "All"):
 
@@ -118,12 +120,12 @@ class DetectInstalledSites():
 
         if (self.hhpathfound and self.herofound):
             encoding = sys.getfilesystemencoding()
-            if type(self.hhpathfound) is not unicode:
-                self.hhpathfound = unicode(self.hhpathfound, encoding)
-            if type(self.tspathfound) is not unicode:
-                self.tspathfound = unicode(self.tspathfound, encoding)
-            if type(self.herofound) is not unicode:
-                self.herofound = unicode(self.herofound, encoding)
+            if type(self.hhpathfound) is not str:
+                self.hhpathfound = str(self.hhpathfound, encoding)
+            if type(self.tspathfound) is not str:
+                self.tspathfound = str(self.tspathfound, encoding)
+            if type(self.herofound) is not str:
+                self.herofound = str(self.herofound, encoding)
             return {"detected":True, "hhpath":self.hhpathfound, "heroname":self.herofound, "tspath":self.tspathfound}
         else:
             return {"detected":False, "hhpath":u"", "heroname":u"", "tspath":u""}

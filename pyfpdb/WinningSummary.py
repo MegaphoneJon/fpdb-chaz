@@ -16,7 +16,9 @@
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
 """winning poker specific summary parsing code"""
+from __future__ import division
 
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -219,11 +221,11 @@ class WinningSummary(TourneySummary):
             
         if self.isRebuy and self.rebuyCost > 0:
             rebuyAmt = int(100*Decimal(self.clearMoneyString(info['REBUYS'].replace(" ", ""))))
-            rebuyCount = rebuyAmt/self.rebuyCost
+            rebuyCount = old_div(rebuyAmt,self.rebuyCost)
             
         if self.isAddOn and self.addOnCost > 0:
             addOnAmt = int(100*Decimal(self.clearMoneyString(info['ADDONS'].replace(" ", ""))))
-            addOnCount = addOnAmt/self.addOnCost
+            addOnCount = old_div(addOnAmt,self.addOnCost)
             
         self.hero = info['PNAME']
             

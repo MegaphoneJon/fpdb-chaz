@@ -20,6 +20,8 @@
 
 #Note that this filter also supports UltimateBet, they are both owned by the same company and form the Cereus Network
 
+from builtins import str
+from builtins import map
 import L10n
 _ = L10n.get_translation()
 
@@ -359,7 +361,7 @@ class Absolute(HandHistoryConverter):
 #    streets PREFLOP, PREDRAW, and THIRD are special cases beacause
 #    we need to grab hero's cards
         for street in ('PREFLOP', 'DEAL'):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 for found in m:
 #                    if m == None:
@@ -369,7 +371,7 @@ class Absolute(HandHistoryConverter):
                     newcards = [validCard(card) for card in found.group('CARDS').split(' ') if card != 'H']
                     hand.addHoleCards(street, hand.hero, closed=newcards, shown=False, mucked=False, dealt=True)
 
-        for street, text in hand.streets.iteritems():
+        for street, text in list(hand.streets.items()):
             if not text or street in ('PREFLOP', 'DEAL'): continue  # already done these
             m = self.re_HeroCards.finditer(hand.streets[street])
             for found in m:

@@ -15,10 +15,12 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from builtins import range
+from builtins import object
 import L10n
 _ = L10n.get_translation()
 
-class GuiTourneyViewer:
+class GuiTourneyViewer(object):
     def __init__(self, config, db, sql, mainwin, debug=True):
         self.db = db
         

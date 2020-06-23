@@ -4,6 +4,7 @@
 
 Popup windows for the HUD.
 """
+from __future__ import division
 #    Copyright 2011-2012,  Ray E. Barker
 #    
 #    This program is free software; you can redistribute it and/or modify
@@ -25,6 +26,8 @@ Popup windows for the HUD.
 #    to do
 
 #    Standard Library modules
+from builtins import range
+from past.utils import old_div
 import logging
 # logging has been set up in fpdb.py or HUD_main.py, use their settings:
 log = logging.getLogger("hud")
@@ -104,7 +107,7 @@ class default(Popup):
     def create(self):
         super(default, self).create()
         player_id = None
-        for id in self.stat_dict.keys():
+        for id in list(self.stat_dict.keys()):
             if self.seat == self.stat_dict[id]['seat']:
                 player_id = id
         if player_id is None:
@@ -138,7 +141,7 @@ class Submenu(Popup):
         super(Submenu, self).create()
 
         player_id = None
-        for id in self.stat_dict.keys():
+        for id in list(self.stat_dict.keys()):
             if self.seat == self.stat_dict[id]['seat']:
                 player_id = id
         if player_id is None:
@@ -214,7 +217,7 @@ class Multicol(Popup):
         super(Multicol, self).create()
 
         player_id = None
-        for id in self.stat_dict.keys():
+        for id in list(self.stat_dict.keys()):
             if self.seat == self.stat_dict[id]['seat']:
                 player_id = id
         if player_id is None:
@@ -224,11 +227,11 @@ class Multicol(Popup):
         if number_of_items < 1:
             self.destroy_pop()
 
-        number_of_cols = number_of_items / 16
+        number_of_cols = old_div(number_of_items, 16)
         if number_of_cols % 16:
             number_of_cols += 1
 
-        number_per_col = number_of_items / float(number_of_cols)
+        number_per_col = old_div(number_of_items, float(number_of_cols))
 
         #if number_per_col != round((number_of_items / float(number_of_cols)),0):
         #    number_per_col += 1

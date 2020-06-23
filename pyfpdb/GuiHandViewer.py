@@ -19,6 +19,10 @@
 
 # This code once was in GuiReplayer.py and was split up in this and the former by zarturo.
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
 import L10n
 _ = L10n.get_translation()
 
@@ -38,7 +42,7 @@ from PyQt5.QtWidgets import (QApplication, QFrame, QMenu,
                              QProgressDialog, QScrollArea, QSplitter,
                              QTableView, QVBoxLayout)
 
-from StringIO import StringIO
+from io import StringIO
 
 import GuiReplayer
 
@@ -122,7 +126,7 @@ class GuiHandViewer(QSplitter):
 
         self.view.doubleClicked.connect(self.row_activated)
         self.view.contextMenuEvent = self.contextMenu
-        self.filterModel.rowsInserted.connect(lambda index, start, end: [self.view.resizeRowToContents(r) for r in xrange(start, end + 1)])
+        self.filterModel.rowsInserted.connect(lambda index, start, end: [self.view.resizeRowToContents(r) for r in range(start, end + 1)])
         self.filterModel.filterAcceptsRow = lambda row, sourceParent: self.is_row_in_card_filter(row)
 
         self.view.resizeColumnsToContents()
@@ -197,10 +201,10 @@ class GuiHandViewer(QSplitter):
     def addHandRow(self, handid, hand):
         hero = self.filters.getHeroes()[hand.sitename]
         won = 0
-        if hero in hand.collectees.keys():
+        if hero in list(hand.collectees.keys()):
             won = hand.collectees[hero]
         bet = 0
-        if hero in hand.pot.committed.keys():
+        if hero in list(hand.pot.committed.keys()):
             bet = hand.pot.committed[hero]
         net = won - bet
         pos = hand.get_player_position(hero)

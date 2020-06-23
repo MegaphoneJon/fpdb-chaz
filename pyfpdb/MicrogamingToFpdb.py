@@ -18,6 +18,9 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -252,7 +255,7 @@ class Microgaming(HandHistoryConverter):
 #    streets PREFLOP, PREDRAW, and THIRD are special cases beacause
 #    we need to grab hero's cards
         for street in ('PREFLOP', 'DEAL'):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 newcards = []
                 for found in m:
@@ -370,7 +373,7 @@ class Microgaming(HandHistoryConverter):
                 if Decimal(action.group('BET')) == Decimal(hand.gametype['sb']):
                     hand.addBlind(pname, 'secondsb', action.group('BET'))
                 else:
-                    amount = str(Decimal(action.group('BET')) + Decimal(action.group('BET'))/2)
+                    amount = str(Decimal(action.group('BET')) + old_div(Decimal(action.group('BET')),2))
                     hand.addBlind(pname, 'both', amount)
             elif action.group('ATYPE') == 'Disconnect':
                 pass # Deal with elsewhere

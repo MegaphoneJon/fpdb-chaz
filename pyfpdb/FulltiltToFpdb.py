@@ -18,6 +18,10 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import division
+from builtins import map
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -300,7 +304,7 @@ class Fulltilt(HandHistoryConverter):
                     raise FpdbParseError
             else:
                 sb = self.clearMoneyString(info['sb'])
-                info['sb'] = str((Decimal(sb)/2).quantize(Decimal("0.01")))
+                info['sb'] = str((old_div(Decimal(sb),2)).quantize(Decimal("0.01")))
                 info['bb'] = str(Decimal(sb).quantize(Decimal("0.01")))
 
         return info
@@ -581,7 +585,7 @@ class Fulltilt(HandHistoryConverter):
     def readButton(self, hand):
         try:
             hand.buttonpos = int(self.re_Button.search(hand.handText).group('BUTTON'))
-        except AttributeError, e:
+        except AttributeError as e:
             # FTP has no indication that a hand is cancelled.
             raise FpdbHandPartial(_("%s Failed to detect button (hand #%s cancelled?)") % ("readButton:", hand.handid))
 
@@ -589,7 +593,7 @@ class Fulltilt(HandHistoryConverter):
 #    streets PREFLOP, PREDRAW, and THIRD are special cases beacause
 #    we need to grab hero's cards
         for street in ('PREFLOP', 'DEAL'):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 for found in m:
 #                    if m == None:
@@ -599,7 +603,7 @@ class Fulltilt(HandHistoryConverter):
                     newcards = found.group('NEWCARDS').split(' ')
                     hand.addHoleCards(street, hand.hero, closed=newcards, shown=False, mucked=False, dealt=True)
 
-        for street, text in hand.streets.iteritems():
+        for street, text in list(hand.streets.items()):
             if not text or street in ('PREFLOP', 'DEAL'): continue  # already done these
             m = self.re_HeroCards.finditer(hand.streets[street])
             for found in m:

@@ -15,6 +15,7 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from __future__ import print_function
 import re
 
 desc = """
@@ -54,4 +55,4 @@ for line in re.split("\n", desc):
     table += "|+\n" + line + "\n"
 
 table += "|}\n"
-print table
+print(table)

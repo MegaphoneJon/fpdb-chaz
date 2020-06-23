@@ -15,6 +15,9 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from __future__ import print_function
+from builtins import str
+from builtins import object
 import L10n
 _ = L10n.get_translation()
 
@@ -41,7 +44,7 @@ re_Head['Fulltilt'] = re.compile(r'^((BEGIN)?\n)?FullTiltPoker.+\n\nSeat', re.MU
 re_XLS['PokerStars'] = re.compile(r'Tournaments\splayed\sby\s\'.+?\'')
 re_XLS['Fulltilt'] = re.compile(r'Player\sTournament\sReport\sfor\s.+?\s\(.*\)')
 
-class FPDBFile:
+class FPDBFile(object):
     path = ""
     ftype = None # Valid: hh, summary, both
     site = None
@@ -55,7 +58,7 @@ class FPDBFile:
     def __init__(self, path):
         self.path = path
 
-class Site:
+class Site(object):
     
     def __init__(self, name, hhc_fname, filter_name, summary, obj):
         self.name = name
@@ -112,7 +115,7 @@ class Site:
             self.re_HeroCards1 = obj.re_HeroCards1
             self.re_HeroCards2 = obj.re_HeroCards2 
 
-class IdentifySite:
+class IdentifySite(object):
     def __init__(self, config, hhcs = None):
         self.config = config
         self.codepage = ("utf8", "utf-16", "cp1252", "ISO-8859-1")
@@ -143,7 +146,7 @@ class IdentifySite:
         """Generates a ordered dictionary of site, filter and filter name for each site in hhcs"""
         if not hhcs:
             hhcs = self.config.hhcs
-        for site, hhc in hhcs.iteritems():
+        for site, hhc in list(hhcs.items()):
             filter = hhc.converter
             filter_name = filter.replace("ToFpdb", "")
             summary = hhc.summaryImporter
@@ -205,7 +208,7 @@ class IdentifySite:
         """Identifies the site the hh file originated from"""
         f = FPDBFile(path)
         f.kodec = kodec
-        for id, site in self.sitelist.iteritems():
+        for id, site in list(self.sitelist.items()):
             filter_name = site.filter_name
             m = site.re_Identify.search(whole_file[:5000])
             if m and filter_name in ('Fulltilt', 'PokerStars'):
@@ -227,7 +230,7 @@ class IdentifySite:
                     f.hero = 'Hero'
                 return f
 
-        for id, site in self.sitelist.iteritems():
+        for id, site in list(self.sitelist.items()):
             if site.summary:
                 if path.endswith('.xls') or path.endswith('.xlsx'):
                     filter_name = site.filter_name
@@ -280,16 +283,16 @@ class IdentifySite:
 
     def getFilesForSite(self, sitename, ftype):
         l = []
-        for name, f in self.filelist.iteritems():
+        for name, f in list(self.filelist.items()):
             if f.ftype != None and f.site.name == sitename and f.ftype == "hh":
                 l.append(f)
         return l
 
     def fetchGameTypes(self):
-        for name, f in self.filelist.iteritems():
+        for name, f in list(self.filelist.items()):
             if f.ftype != None and f.ftype == "hh":
                 try: #TODO: this is a dirty hack. Borrowed from fpdb_import
-                    name = unicode(name, "utf8", "replace")
+                    name = str(name, "utf8", "replace")
                 except TypeError:
                     log.error(TypeError)
                 mod = __import__(f.site.hhc_fname)
@@ -308,16 +311,16 @@ def main(argv=None):
     IdSite = IdentifySite(config)
     start = time()
     IdSite.scan(in_path)
-    print 'duration', time() - start
+    print('duration', time() - start)
 
-    print "\n----------- SITE LIST -----------"
-    for sid, site in IdSite.sitelist.iteritems():
-        print "%2d: Name: %s HHC: %s Summary: %s" %(sid, site.name, site.filter_name, site.summary)
-    print "----------- END SITE LIST -----------"
+    print("\n----------- SITE LIST -----------")
+    for sid, site in list(IdSite.sitelist.items()):
+        print("%2d: Name: %s HHC: %s Summary: %s" %(sid, site.name, site.filter_name, site.summary))
+    print("----------- END SITE LIST -----------")
 
-    print "\n----------- ID REGRESSION FILES -----------"
+    print("\n----------- ID REGRESSION FILES -----------")
     count = 0
-    for f, ffile in IdSite.filelist.iteritems():
+    for f, ffile in list(IdSite.filelist.items()):
         tmp = ""
         tmp += ": Type: %s " % ffile.ftype
         count += 1
@@ -325,13 +328,13 @@ def main(argv=None):
             tmp += "Conv: %s" % ffile.site.hhc_fname
         elif ffile.ftype == "summary":
             tmp += "Conv: %s" % ffile.site.summary
-        print f, tmp
-    print count, 'files identified'
-    print "----------- END ID REGRESSION FILES -----------"
+        print(f, tmp)
+    print(count, 'files identified')
+    print("----------- END ID REGRESSION FILES -----------")
 
-    print "----------- RETRIEVE FOR SINGLE SITE -----------"
+    print("----------- RETRIEVE FOR SINGLE SITE -----------")
     IdSite.getFilesForSite("PokerStars", "hh")
-    print "----------- END RETRIEVE FOR SINGLE SITE -----------"
+    print("----------- END RETRIEVE FOR SINGLE SITE -----------")
 
 if __name__ == '__main__':
     sys.exit(main())

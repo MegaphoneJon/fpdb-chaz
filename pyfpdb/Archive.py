@@ -17,6 +17,7 @@
 
 ########################################################################
 
+from builtins import object
 import os, sys
 import re
 from time import time, sleep
@@ -26,12 +27,12 @@ import subprocess
 
 from IdentifySite import *
 
-class FPDBArchive:
+class FPDBArchive(object):
     def __init__(self, hand):
         self.hid = hand.dbid_hands
         self.handText = hand.handText
         
-class Archive():
+class Archive(object):
     def __init__(self, config=None, path = None, ftype="hh"):
         self.config = config
         self.archivePath = None

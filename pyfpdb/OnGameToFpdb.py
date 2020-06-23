@@ -18,6 +18,9 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -237,7 +240,7 @@ class OnGame(HandHistoryConverter):
                     raise FpdbParseError
             else:
                 sb = self.clearMoneyString(mg['SB'])
-                info['sb'] = str((Decimal(sb)/2).quantize(Decimal("0.01")))
+                info['sb'] = str((old_div(Decimal(sb),2)).quantize(Decimal("0.01")))
                 info['bb'] = str(Decimal(sb).quantize(Decimal("0.01")))    
         return info
 
@@ -290,7 +293,7 @@ class OnGame(HandHistoryConverter):
             if key == 'BUYIN':
                 if info[key] is not None:
                     hand.buyin = int(100*Decimal(self.clearMoneyString(info[key])))
-                    hand.fee = int(hand.buyin - hand.buyin/1.1)
+                    hand.fee = int(hand.buyin - old_div(hand.buyin,1.1))
                     hand.buyin -= hand.fee
                 else:
                     hand.buyin = 0
@@ -409,7 +412,7 @@ class OnGame(HandHistoryConverter):
         # streets PREFLOP, PREDRAW, and THIRD are special cases beacause
         # we need to grab hero's cards
         for street in ('PREFLOP', 'DEAL'):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 for found in m:
                     hand.hero = found.group('PNAME')
@@ -417,7 +420,7 @@ class OnGame(HandHistoryConverter):
                     hand.addHoleCards(street, hand.hero, closed=newcards, shown=False, mucked=False, dealt=True)
                     
         for street in hand.holeStreets:
-            if hand.streets.has_key(street):
+            if street in hand.streets:
                 if not hand.streets[street] or street in ('PREFLOP', 'DEAL') or hand.gametype['base'] == 'hold': continue  # already done these
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 for found in m:

@@ -15,6 +15,8 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from builtins import str
+from builtins import range
 import L10n
 _ = L10n.get_translation()
 
@@ -96,7 +98,7 @@ class GuiPrefs(QDialog):
             name = ""
             item = QTreeWidgetItem(parent, [setting, value])
             if node.hasAttributes():
-                for i in xrange(node.attributes.length):
+                for i in range(node.attributes.length):
                     localName,updated = self.rewriteText( node.attributes.item(i).localName )
                     attritem = QTreeWidgetItem(item, [localName, node.attributes.item(i).value])
                     attritem.setData(1, Qt.UserRole, node.attributes.item(i))

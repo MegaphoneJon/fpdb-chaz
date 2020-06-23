@@ -16,21 +16,24 @@
 #In the "official" distribution you can find the license in agpl-3.0.txt
 
 """A script for adding new stats to the regression test library"""
+from __future__ import print_function
 
+from future import standard_library
+standard_library.install_aliases()
 import Options
 
 import logging, os, sys, string
-import re, urllib2, datetime, pytz
+import re, urllib.request, urllib.error, urllib.parse, datetime, pytz
 import codecs
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
 def write_file(filename, data):
-    print data
+    print(data)
     f = open(filename, 'w')
     f.write(data)
     f.close()
-    print f
+    print(f)
 
 def update(leaf, file_type, stat, default):
     filename = leaf
@@ -45,7 +48,7 @@ def update(leaf, file_type, stat, default):
         hash = eval(whole_file)
         if file_type==".hp":
             for player in hash:
-                print "player:", player, "<end>"
+                print("player:", player, "<end>")
                 hash[player][stat] = default
         elif file_type==".hands":
             hash[stat] = default
@@ -69,9 +72,9 @@ def walk_test_files(dir, file_type, stat, default):
             update(nfile, file_type, stat, default)
 
 def usage():
-    print "USAGE:"
-    print "Edit this script to activate walk_test_files in main(). Parameters explained in comment of walk_test_files."
-    print "\t./ScriptAddStatToRegression.py"
+    print("USAGE:")
+    print("Edit this script to activate walk_test_files in main(). Parameters explained in comment of walk_test_files.")
+    print("\t./ScriptAddStatToRegression.py")
     sys.exit(0)
 
 def main(argv=None):
@@ -83,9 +86,9 @@ def main(argv=None):
     if options.usage == True: # or (len(argv) < 1):
         usage()
 
-    print "WARNING:"
-    print "This script will modify many files in the regression test suite"
-    print "As a safety precaution, you need to edit the file manually to run it"
+    print("WARNING:")
+    print("This script will modify many files in the regression test suite")
+    print("As a safety precaution, you need to edit the file manually to run it")
     #walk_test_files('regression-test-files/', '.hp', 'NEW_STAT', "DEFAULT_VALUE")
 
 if __name__ == '__main__':

@@ -18,6 +18,9 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -250,7 +253,7 @@ class BetOnline(HandHistoryConverter):
                     log.error(_("BetOnlineToFpdb.determineGameType: Lim_Blinds has no lookup for '%s' - '%s'") % (mg['BB'], tmp))
                     raise FpdbParseError
             else:
-                info['sb'] = str((Decimal(info['SB'])/2).quantize(Decimal("0.01")))
+                info['sb'] = str((old_div(Decimal(info['SB']),2)).quantize(Decimal("0.01")))
                 info['bb'] = str(Decimal(info['SB']).quantize(Decimal("0.01")))
 
         return info
@@ -491,7 +494,7 @@ class BetOnline(HandHistoryConverter):
             if a.group('SBBB')!='0.00':
                 pname = self.unknownPlayer(hand, a.group('PNAME'))
                 sbbb = self.clearMoneyString(a.group('SBBB'))
-                amount = str(Decimal(sbbb) + Decimal(sbbb)/2)
+                amount = str(Decimal(sbbb) + old_div(Decimal(sbbb),2))
                 hand.addBlind(pname, 'both', amount)
             else:
                 pname = self.unknownPlayer(hand, a.group('PNAME'))
@@ -507,7 +510,7 @@ class BetOnline(HandHistoryConverter):
                 if self.Lim_Blinds.get(BB) != None:
                     hand.gametype['sb'] = self.Lim_Blinds.get(BB)[0]
             elif hand.gametype['bb'] == None and hand.gametype['sb'] != None:
-                for k, v in self.Lim_Blinds.iteritems():
+                for k, v in list(self.Lim_Blinds.items()):
                     if hand.gametype['sb'] == v[0]:
                         hand.gametype['bb'] = v[1]
             if hand.gametype['sb'] == None or hand.gametype['bb'] == None:
@@ -527,7 +530,7 @@ class BetOnline(HandHistoryConverter):
 #    streets PREFLOP, PREDRAW, and THIRD are special cases beacause
 #    we need to grab hero's cards
         for street in ('PREFLOP', 'DEAL'):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 for found in m:
 #                    if m == None:
@@ -538,7 +541,7 @@ class BetOnline(HandHistoryConverter):
                     newcards = [c[:-1].replace('10', 'T') + c[-1].lower() for c in newcards]
                     hand.addHoleCards(street, hand.hero, closed=newcards, shown=False, mucked=False, dealt=True)
 
-        for street, text in hand.streets.iteritems():
+        for street, text in list(hand.streets.items()):
             if not text or street in ('PREFLOP', 'DEAL'): continue  # already done these
             m = self.re_HeroCards.finditer(hand.streets[street])
             for found in m:

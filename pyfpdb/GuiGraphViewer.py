@@ -15,6 +15,10 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from __future__ import print_function
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -34,16 +38,16 @@ try:
     if calluse:
         try:
             matplotlib.use('qt5agg')
-        except ValueError, e:
-            print e
+        except ValueError as e:
+            print(e)
     from matplotlib.figure import Figure
     from matplotlib.backends.backend_qt5agg import FigureCanvas
     from matplotlib.font_manager import FontProperties
     from numpy import cumsum
-except ImportError, inst:
-    print _("""Failed to load libs for graphing, graphing will not function. Please install numpy and matplotlib if you want to use graphs.""")
-    print _("""This is of no consequence for other parts of the program, e.g. import and HUD are NOT affected by this problem.""")
-    print "ImportError: %s" % inst.args
+except ImportError as inst:
+    print(_("""Failed to load libs for graphing, graphing will not function. Please install numpy and matplotlib if you want to use graphs."""))
+    print(_("""This is of no consequence for other parts of the program, e.g. import and HUD are NOT affected by this problem."""))
+    print("ImportError: %s" % inst.args)
 
 
 class GuiGraphViewer(QSplitter):
@@ -144,17 +148,17 @@ class GuiGraphViewer(QSplitter):
 
         if not sitenos:
             #Should probably pop up here.
-            print _("No sites selected - defaulting to PokerStars")
+            print(_("No sites selected - defaulting to PokerStars"))
             self.db.rollback()
             return
 
         if not playerids:
-            print _("No player ids found")
+            print(_("No player ids found"))
             self.db.rollback()
             return
 
         if not limits:
-            print _("No limits found")
+            print(_("No limits found"))
             self.db.rollback()
             return
 
@@ -164,7 +168,7 @@ class GuiGraphViewer(QSplitter):
         #Get graph data from DB
         starttime = time()
         (green, blue, red, orange) = self.getRingProfitGraph(playerids, sitenos, limits, games, currencies, display_in)
-        print _("Graph generated in: %s") %(time() - starttime)
+        print(_("Graph generated in: %s") %(time() - starttime))
 
         #Set axis labels and grid overlay properites
         self.ax.set_xlabel(_("Hands"))
@@ -243,7 +247,7 @@ class GuiGraphViewer(QSplitter):
         sitetest = str(tuple(sites))
         #nametest = nametest.replace("L", "")
 
-        for m in self.filters.display.items():
+        for m in list(self.filters.display.items()):
             if m[0] == 'Games' and m[1]:
                 if len(games) > 0:
                     gametest = str(tuple(games))
@@ -287,15 +291,15 @@ class GuiGraphViewer(QSplitter):
         if len(winnings) == 0:
             return (None, None, None, None)
 
-        green = map(lambda x:float(x[1]), winnings)
-        blue  = map(lambda x: float(x[1]) if x[2] == True  else 0.0, winnings)
-        red   = map(lambda x: float(x[1]) if x[2] == False else 0.0, winnings)
-        orange = map(lambda x:float(x[3]), winnings)
+        green = [float(x[1]) for x in winnings]
+        blue  = [float(x[1]) if x[2] == True  else 0.0 for x in winnings]
+        red   = [float(x[1]) if x[2] == False else 0.0 for x in winnings]
+        orange = [float(x[3]) for x in winnings]
         greenline = cumsum(green)
         blueline  = cumsum(blue)
         redline   = cumsum(red)
         orangeline = cumsum(orange)
-        return (greenline/100, blueline/100, redline/100, orangeline/100)
+        return (old_div(greenline,100), old_div(blueline,100), old_div(redline,100), old_div(orangeline,100))
 
     def exportGraph (self, widget, data):
         if self.fig is None:
@@ -316,8 +320,8 @@ class GuiGraphViewer(QSplitter):
 
         response = dia_chooser.run()
         
-        if response <> gtk.RESPONSE_OK:
-            print _('Closed, no graph exported')
+        if response != gtk.RESPONSE_OK:
+            print(_('Closed, no graph exported'))
             dia_chooser.destroy()
             return
             

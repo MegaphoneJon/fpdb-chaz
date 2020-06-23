@@ -15,6 +15,7 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from builtins import str
 import L10n
 _ = L10n.get_translation()
 
@@ -40,7 +41,7 @@ def to_utf8(s):
 
     try:
         #(_out, _len) = encoder_to_utf.encode(s)
-        _out = unicode(s, Configuration.LOCALE_ENCODING).encode('utf-8')
+        _out = str(s, Configuration.LOCALE_ENCODING).encode('utf-8')
         return _out
     except UnicodeDecodeError:
         sys.stderr.write(_('Could not convert: "%s"') % (s+"\n"))
@@ -55,7 +56,7 @@ def to_db_utf8(s):
     if not_needed2: return s
 
     try:
-        (_out, _len) = encoder_to_utf.encode(unicode(s))
+        (_out, _len) = encoder_to_utf.encode(str(s))
         return _out
     except UnicodeDecodeError:
         sys.stderr.write(_('Could not convert: "%s"') % (s+"\n"))

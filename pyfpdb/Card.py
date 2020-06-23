@@ -15,6 +15,10 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from __future__ import print_function
+from __future__ import division
+from builtins import input
+from past.utils import old_div
 import sys
 import L10n
 _ = L10n.get_translation()
@@ -193,7 +197,7 @@ def twoStartCardString(card):
     ret = 'xx'
     if card > 0 and card < 170:
         s = ('2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A')
-        x = (card-1) / 13
+        x = old_div((card-1), 13)
         y = (card-1) - 13 * x
         if x == y:  ret = s[x] + s[y]
         elif x > y: ret = s[x] + s[y] + 's'
@@ -502,14 +506,14 @@ def encodeRazzStartHand(cards):
 if __name__ == '__main__':
     print("1) "+_("Convert list ID to card (e.g. 1 to 2h)"))
     print("2) "+_("Convert card to list ID (e.g. 2h to 1)"))
-    s = raw_input('--> ')
+    s = eval(input('--> '))
     if s == '1':
         while True:
-            cardid = raw_input(_('Enter list ID:')+" ")
+            cardid = eval(input(_('Enter list ID:')+" "))
             print(_("Card:")+" '%s'" % suitFromCardList[int(cardid)])
     elif s == '2':
         while True:
-            cardid = raw_input(_('Enter card:')+" ")
+            cardid = eval(input(_('Enter card:')+" "))
             print(_("Encoded card:")+" '%s'" % encodeCard(cardid))
     else:
         print(_("Please enter 1 or 2"))

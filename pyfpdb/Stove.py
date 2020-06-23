@@ -11,6 +11,10 @@
 #
 # TODO gettextify usage print
 
+from __future__ import print_function
+from __future__ import division
+from past.utils import old_div
+from builtins import object
 import L10n
 _ = L10n.get_translation()
 
@@ -30,7 +34,7 @@ OFFSUIT = 2
 ev = pokereval.PokerEval()
 
 
-class Stove:
+class Stove(object):
     def __init__(self):
         self.hand = None
         self.board = None
@@ -74,7 +78,7 @@ class Stove:
         self.h_range = h_range
 
 
-class Cards:
+class Cards(object):
     def __init__(self, c1, c2):
         self.c1 = c1
         self.c2 = c2
@@ -82,7 +86,7 @@ class Cards:
     def get(self):
         return [self.c1, self.c2]
 
-class Board:
+class Board(object):
     def __init__(self, b1=None, b2=None, b3=None, b4=None, b5=None):
         self.b1 = b1
         self.b2 = b2
@@ -111,7 +115,7 @@ class Board:
 
         return b
 
-class Range:
+class Range(object):
     def __init__(self):
         self.__hands = set()
 
@@ -126,7 +130,7 @@ class Range:
 
 
 
-class EV:
+class EV(object):
     def __init__(self, plays, win, tie, lose):
         self.n_hands = plays
         self.n_wins = win
@@ -134,7 +138,7 @@ class EV:
         self.n_losses = lose
 
 
-class SumEV:
+class SumEV(object):
     def __init__(self):
         self.n_hands = 0
         self.n_wins = 0
@@ -149,10 +153,10 @@ class SumEV:
         self.n_losses += ev.n_losses
 
     def show(self, hand, h_range):
-        win_pct = 100 * (float(self.n_wins) / float(self.n_hands))
-        lose_pct = 100 * (float(self.n_losses) / float(self.n_hands))
-        tie_pct = 100 * (float(self.n_ties) / float(self.n_hands))
-        equity = win_pct + tie_pct / 2.
+        win_pct = 100 * (old_div(float(self.n_wins), float(self.n_hands)))
+        lose_pct = 100 * (old_div(float(self.n_losses), float(self.n_hands)))
+        tie_pct = 100 * (old_div(float(self.n_ties), float(self.n_hands)))
+        equity = win_pct + old_div(tie_pct, 2.)
         self.output = """
 Enumerated %d possible plays.
 Your hand: (%s %s)
@@ -161,7 +165,7 @@ Equity       Win         Lose         Tie
 %5.2f%%    %5.2f%%    %5.2f%%    %5.2f%%
 """ % (self.n_hands, hand.c1, hand.c2, cards_from_range(h_range), equity, win_pct, lose_pct, tie_pct)
 
-        print self.output
+        print(self.output)
 
 
 # Expands hand abbreviations such as JJ and AK to full hand ranges.
@@ -304,7 +308,7 @@ def odds_for_range(holder):
         b.append("__")
 
     if monte_carlo:
-        print _('No board given. Using Monte-Carlo simulation...')
+        print(_('No board given. Using Monte-Carlo simulation...'))
         iters = random.randint(25000, 125000)
     else:
         iters = -1
@@ -321,14 +325,14 @@ def odds_for_range(holder):
     return sev
 
 def usage(me):
-    print """Texas Hold'Em odds calculator
+    print("""Texas Hold'Em odds calculator
 Calculates odds against a range of hands.
 
 To use: %s '<board cards>' '<your hand>' '<opponent's range>' [...]
 
 Separate cards with space.
 Separate hands in range with commas.
-""" % me
+""" % me)
 
 def cards_from_range(h_range):
     s = '{'

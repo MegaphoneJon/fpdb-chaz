@@ -15,13 +15,19 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from builtins import object
 import L10n
 _ = L10n.get_translation()
 
 import os
 import sys
 import traceback
-import Queue
+import queue
 import re
 
 import logging
@@ -36,7 +42,7 @@ if __name__ == "__main__":
 # logging has been set up in fpdb.py or HUD_main.py, use their settings:
 log = logging.getLogger("maintdbs")
 
-class GuiDatabase:
+class GuiDatabase(object):
 
     # columns in liststore:
     MODEL_DBMS = 0
@@ -129,7 +135,7 @@ class GuiDatabase:
             #self.dia.connect('response', self.dialog_response_cb)
         except:
             err = traceback.extract_tb(sys.exc_info()[2])[-1]
-            print 'guidbmaint: '+ err[2] + "(" + str(err[1]) + "): " + str(sys.exc_info()[1])
+            print('guidbmaint: '+ err[2] + "(" + str(err[1]) + "): " + str(sys.exc_info()[1]))
 
     def dialog_response_cb(self, dialog, response_id):
         # this is called whether close button is pressed or window is closed
@@ -225,8 +231,8 @@ class GuiDatabase:
                         self.setDefaultDB(row)
 
     def setDefaultDB(self, row):
-        print "set new defaultdb:", row, self.liststore[row][self.MODEL_NAME]
-        for r in xrange(len(self.liststore)):
+        print("set new defaultdb:", row, self.liststore[row][self.MODEL_NAME])
+        for r in range(len(self.liststore)):
             if r == row:
                 self.liststore[r][self.MODEL_DFLTIC] = gtk.STOCK_APPLY
                 default = "True"
@@ -287,8 +293,8 @@ class GuiDatabase:
             self.dia.show()
         except:
             err = traceback.extract_tb(sys.exc_info()[2])[-1]
-            print _('loadDbs error: ')+str(dbms_num)+','+host+','+name+','+user+','+passwd+' failed: ' \
-                      + err[2] + "(" + str(err[1]) + "): " + str(sys.exc_info()[1])
+            print(_('loadDbs error: ')+str(dbms_num)+','+host+','+name+','+user+','+passwd+' failed: ' \
+                      + err[2] + "(" + str(err[1]) + "): " + str(sys.exc_info()[1]))
 
     def sortCols(self, col, n):
         try:
@@ -300,7 +306,7 @@ class GuiDatabase:
             self.liststore.set_sort_column_id(n, col.get_sort_order())
             #self.liststore.set_sort_func(n, self.sortnums, (n,grid))
             log.info('sortcols len(listcols)='+str(len(self.listcols)))
-            for i in xrange(len(self.listcols)):
+            for i in range(len(self.listcols)):
                 log.info('sortcols i='+str(i))
                 self.listcols[i].set_sort_indicator(False)
             self.listcols[n].set_sort_indicator(True)
@@ -308,8 +314,8 @@ class GuiDatabase:
             # to turn indicator off for other cols
         except:
             err = traceback.extract_tb(sys.exc_info()[2])
-            print "***sortCols " + _("error") + ": " + str(sys.exc_info()[1])
-            print "\n".join( [e[0]+':'+str(e[1])+" "+e[2] for e in err] )
+            print("***sortCols " + _("error") + ": " + str(sys.exc_info()[1]))
+            print("\n".join( [e[0]+':'+str(e[1])+" "+e[2] for e in err] ))
             log.info('sortCols ' + _('error') + ': ' + str(sys.exc_info()) )
 
     def refresh(self, widget, data):

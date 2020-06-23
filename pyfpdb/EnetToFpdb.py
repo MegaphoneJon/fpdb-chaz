@@ -18,6 +18,10 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import division
+from builtins import str
+from builtins import range
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -191,7 +195,7 @@ class Enet(HandHistoryConverter):
                     log.error(_("EnetToFpdb.determineGameType: Lim_Blinds has no lookup for '%s' - '%s'") % (mg['BB'], tmp))
                     raise FpdbParseError
             else:
-                info['sb'] = str((Decimal(self.clearMoneyString(mg['SB']))/2).quantize(Decimal("0.01")))
+                info['sb'] = str((old_div(Decimal(self.clearMoneyString(mg['SB'])),2)).quantize(Decimal("0.01")))
                 info['bb'] = str(Decimal(self.clearMoneyString(mg['SB'])).quantize(Decimal("0.01")))    
 
         return info
@@ -336,7 +340,7 @@ class Enet(HandHistoryConverter):
 #    streets PREFLOP, PREDRAW, and THIRD are special cases beacause
 #    we need to grab hero's cards
         for street in ('PREFLOP', 'DEAL'):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 for found in m:
 #                    if m == None:

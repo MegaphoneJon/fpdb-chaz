@@ -18,6 +18,9 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -190,7 +193,7 @@ class Cake(HandHistoryConverter):
                     log.error(_("CakeToFpdb.determineGameType: Lim_Blinds has no lookup for '%s' - '%s'") % (mg['BB'], tmp))
                     raise FpdbParseError
             else:
-                info['sb'] = str((Decimal(info['sb'])/2).quantize(Decimal("0.01")))
+                info['sb'] = str((old_div(Decimal(info['sb']),2)).quantize(Decimal("0.01")))
                 info['bb'] = str(Decimal(info['sb']).quantize(Decimal("0.01")))
                 
         return info
@@ -333,7 +336,7 @@ class Cake(HandHistoryConverter):
 
     def readHoleCards(self, hand):
         for street in ('PREFLOP', 'DEAL'):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 for found in m:
                     hand.hero = found.group('PNAME')

@@ -34,6 +34,7 @@ multiple-level inheritence in much of this code, class heirarchies
 are not immediately obvious, and there is very close linkage with most of 
 the Hud modules.
 """
+from builtins import str
 import L10n
 _ = L10n.get_translation()
 
@@ -143,7 +144,7 @@ class Classic_stat(Aux_Hud.Simple_stat):
             except: pass
         self.set_color(fg=fg,bg=None)
         
-        statstring = "%s%s%s" % (self.hudprefix, unicode(self.number[1]), self.hudsuffix)
+        statstring = "%s%s%s" % (self.hudprefix, str(self.number[1]), self.hudsuffix)
         self.lab.setText(statstring)
         
         tip = "%s\n%s\n%s, %s" % (stat_dict[player_id]['screen_name'], self.number[5], self.number[3], self.number[4])

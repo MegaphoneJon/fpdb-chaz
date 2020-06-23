@@ -15,6 +15,11 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from __future__ import print_function
+from __future__ import division
+from builtins import str
+from builtins import object
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -40,7 +45,7 @@ if __name__ == "__main__":
 log = logging.getLogger("importer")
 
 
-class GuiTourneyImport():
+class GuiTourneyImport(object):
     def progressNotify(self):
         "A callback to the interface while events are pending"
         while gtk.events_pending():
@@ -67,13 +72,13 @@ class GuiTourneyImport():
             ttime = time() - starttime
             if ttime == 0:
                 ttime = 1
-            print _('Tourney import done: Stored: %d, Errors: %d in %s seconds - %.0f/sec')\
-                     % (stored, errs, ttime, (stored+0.0) / ttime)
+            print(_('Tourney import done: Stored: %d, Errors: %d in %s seconds - %.0f/sec')\
+                     % (stored, errs, ttime, old_div((stored+0.0), ttime)))
             self.importer.clearFileList()
 
             self.settings['global_lock'].release()
         else:
-            print _("tourney import aborted - global lock not available")
+            print(_("tourney import aborted - global lock not available"))
 
     def get_vbox(self):
         """returns the vbox of this thread"""
@@ -113,7 +118,7 @@ class GuiTourneyImport():
         self.cbfilter = gtk.combo_box_new_text()
         disabled_sites = []                                # move disabled sites to bottom of list
         for w in self.config.hhcs:
-            print "%s = '%s'" %(w, self.config.hhcs[w].summaryImporter)
+            print("%s = '%s'" %(w, self.config.hhcs[w].summaryImporter))
             try:
                 # Include sites with a tourney summary importer, and enabled
                 if self.config.supported_sites[w].enabled and self.config.hhcs[w].summaryImporter != '':
@@ -144,7 +149,7 @@ class GuiTourneyImport():
                           yoptions=gtk.SHRINK)
         self.lab_spacer.show()
 
-class SummaryImporter:
+class SummaryImporter(object):
     def __init__(self, config, sql = None, parent = None, caller = None):
         self.config     = config
         self.database   = Database.Database(self.config)
@@ -164,7 +169,7 @@ class SummaryImporter:
 
     def addImportFile(self, filename, site = "default", tsc = "passthrough"):
         if filename in self.filelist or not os.path.exists(filename):
-            print "DEBUG: addImportFile: File exists, or path non-existent"
+            print("DEBUG: addImportFile: File exists, or path non-existent")
             return
         self.filelist[filename] = [site] + [tsc]
 
@@ -187,7 +192,7 @@ class SummaryImporter:
         if self.config.posix:
             pass
         else:
-            inputPath = unicode(inputPath)
+            inputPath = str(inputPath)
             
         tsc = self.config.hhcs[site].summaryImporter
         if os.path.isdir(inputPath):
@@ -215,7 +220,7 @@ class SummaryImporter:
                 total_errors += errs
                 total_imported += imported
             else:
-                print "Unable to access: %s" % f
+                print("Unable to access: %s" % f)
         del ProgressDialog
         self.database.cleanUpTourneyTypes()
         return (total_imported, total_errors)
@@ -259,11 +264,11 @@ class SummaryImporter:
                     conv = obj(db=self.database, config=self.config, siteName=site, summaryText=summaryText, in_path = filename)
                     self.database.resetBulkCache(False)
                     conv.insertOrUpdate(printtest = self.settings['testData'])
-                except FpdbParseError, e:
+                except FpdbParseError as e:
                     log.error(_("Tourney import parse error in file: %s") % filename)
                     errors += 1
                 if j != 1:
-                    print _("Finished importing %s/%s tournament summaries") %(j, len(summaryTexts))
+                    print(_("Finished importing %s/%s tournament summaries") %(j, len(summaryTexts)))
                 imported = j
             ####Lock Placeholder####
         return (imported - errors, errors)
@@ -273,7 +278,7 @@ class SummaryImporter:
         self.updatetime = {}
         self.filelist = {}
 
-class ProgressBar:
+class ProgressBar(object):
     """
     Popup window to show progress
 
@@ -301,7 +306,7 @@ class ProgressBar:
         #progress bar total set to 1 plus the number of items,to prevent it
         #reaching 100% prior to processing fully completing
 
-        progress_percent = float(self.fraction) / (float(self.sum) + 1.0)
+        progress_percent = old_div(float(self.fraction), (float(self.sum) + 1.0))
         progress_text = (self.title + " "
                             + str(self.fraction) + " / " + str(self.sum))
 
@@ -370,10 +375,10 @@ class ProgressBar:
         self.progress.show()
 
 def usage():
-    print _("USAGE:")
-    print "./GuiTourneyImport.py -k <Site> -f <" + _("Filename") + ">"
-    print "./GuiTourneyImport.py -k PokerStars -f <" + _("Filename") + ">"
-    print "./GuiTourneyImport.py -k 'Full Tilt Poker' -f <" + _("Filename") + ">"
+    print(_("USAGE:"))
+    print("./GuiTourneyImport.py -k <Site> -f <" + _("Filename") + ">")
+    print("./GuiTourneyImport.py -k PokerStars -f <" + _("Filename") + ">")
+    print("./GuiTourneyImport.py -k 'Full Tilt Poker' -f <" + _("Filename") + ">")
 
 def main(argv=None):
     """main can also be called in the python interpreter, by supplying the command line as the argument."""
@@ -389,7 +394,7 @@ def main(argv=None):
         sys.exit(0)
 
     if options.hhc == "PokerStarsToFpdb":
-        print _("Need to define a converter")
+        print(_("Need to define a converter"))
         usage()
         exit(0)
 
@@ -397,7 +402,7 @@ def main(argv=None):
     sql = SQL.Sql(db_server = 'sqlite')
 
     if options.filename == None:
-        print _("Need a filename to import")
+        print(_("Need a filename to import"))
         usage()
         exit(0)
 
@@ -412,8 +417,8 @@ def main(argv=None):
     ttime = time() - starttime
     if ttime == 0:
         ttime = 1
-    print _('Tourney import done: Stored: %d, Errors: %d in %s seconds - %.0f/sec')\
-                     % (stored, errs, ttime, (stored+0.0) / ttime)
+    print(_('Tourney import done: Stored: %d, Errors: %d in %s seconds - %.0f/sec')\
+                     % (stored, errs, ttime, old_div((stored+0.0), ttime)))
     importer.clearFileList()
 
     

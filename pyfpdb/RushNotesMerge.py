@@ -13,6 +13,7 @@ The generated file can then replace heroname.xml (if all is well).
 
 
 """
+from __future__ import print_function
 #    Copyright 2010-2011,  "Gimick" of the FPDB project  fpdb.sourceforge.net
 #
 #This program is free software: you can redistribute it and/or modify
@@ -57,7 +58,7 @@ def writexml(self, writer, indent="", addindent="", newl=""):
     writer.write(indent+"<" + self.tagName)
 
     attrs = self._get_attributes()
-    a_names = attrs.keys()
+    a_names = list(attrs.keys())
     a_names.sort()
 
     for a_name in a_names:
@@ -90,32 +91,32 @@ def cleannote(textin):
     return textin[0:textin.find("~fpdb~")] + textin[textin.find("~ends~")+6:]
 # get out now if parameter not passed
 try: 
-    sys.argv[1] <> ""
+    sys.argv[1] != ""
 except: 
-    print "A parameter is required, quitting now"
-    print "normal usage is something like:"
-    print '$> ./pyfpdb/RushNotesMerge.py "/home/foo/.wine/drive_c/Program Files/Full Tilt Poker/myhero.xml"'
+    print("A parameter is required, quitting now")
+    print("normal usage is something like:")
+    print('$> ./pyfpdb/RushNotesMerge.py "/home/foo/.wine/drive_c/Program Files/Full Tilt Poker/myhero.xml"')
     quit()
 
 if not os.path.isfile(sys.argv[1]):
-    print "Hero notes file not found, quitting"
-    print "normal usage is something like:"
-    print '$> ./pyfpdb/RushNotesMerge.py "/home/foo/.wine/drive_c/Program Files/Full Tilt Poker/myhero.xml"'
+    print("Hero notes file not found, quitting")
+    print("normal usage is something like:")
+    print('$> ./pyfpdb/RushNotesMerge.py "/home/foo/.wine/drive_c/Program Files/Full Tilt Poker/myhero.xml"')
     quit()
 
 if not os.path.isfile((sys.argv[1]+".queue")):
-    print "Nothing found to merge, quitting"
+    print("Nothing found to merge, quitting")
     quit()
 
-print "***************************************************************"
-print "IMPORTANT: *** Before running this merge: ***"
-print "Closedown the FullTiltClient and wait for it to completely stop"
-print "If FullTiltClient was running, run the merge again once it"
-print "has stopped completely"
-print "***************************************************************"
-print
-print "read from: ", sys.argv[1]
-print "updated with: ", sys.argv[1]+".queue"
+print("***************************************************************")
+print("IMPORTANT: *** Before running this merge: ***")
+print("Closedown the FullTiltClient and wait for it to completely stop")
+print("If FullTiltClient was running, run the merge again once it")
+print("has stopped completely")
+print("***************************************************************")
+print()
+print("read from: ", sys.argv[1])
+print("updated with: ", sys.argv[1]+".queue")
 
 #read queue and turn into a dict
 queuedict = {}
@@ -170,15 +171,15 @@ mergednotes.close()
 
 xmlnotefile.unlink
 
-print "written to: ", sys.argv[1]+".merged"
-print ""
-print "number in queue: ", statqueue
-print "existing players updated: ", statupdated
-print "new players added: ", statadded
-print "\n"
-print "Use a viewer to check the contents of the merge file."
-print "If you are happy, carry out the following steps:"
-print "1 Rename or delete the existing notes file (normally <heroname>.xml)"
-print "2 Rename the .merged file to become the new notes file"
-print "3 Delete the .queue file (it will be created at the next rush autoimport)"
+print("written to: ", sys.argv[1]+".merged")
+print("")
+print("number in queue: ", statqueue)
+print("existing players updated: ", statupdated)
+print("new players added: ", statadded)
+print("\n")
+print("Use a viewer to check the contents of the merge file.")
+print("If you are happy, carry out the following steps:")
+print("1 Rename or delete the existing notes file (normally <heroname>.xml)")
+print("2 Rename the .merged file to become the new notes file")
+print("3 Delete the .queue file (it will be created at the next rush autoimport)")
 

@@ -15,6 +15,10 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 import L10n
 _ = L10n.get_translation()
 
@@ -27,7 +31,7 @@ import codecs
 import Options
 import Configuration
 from Exceptions import *
-from cStringIO import StringIO
+from io import StringIO
 
 (options, argv) = Options.fpdb_options()
 
@@ -36,7 +40,7 @@ re_SplitArchive = re.compile(__ARCHIVE_PRE_HEADER_REGEX)
 codepage = ["utf-16", "utf-8", "cp1252"]
 
 
-class SplitHandHistory:
+class SplitHandHistory(object):
     def __init__(self, config, in_path = '-', out_path = None, hands = 100, filter = "PokerStarsToFpdb", archive = False):
         self.config = config
         self.in_path = in_path
@@ -123,7 +127,7 @@ class SplitHandHistory:
                 done = True
                 break
             except:
-                print _("Unexpected error processing file")
+                print(_("Unexpected error processing file"))
                 sys.exit(2)
             n += 1
         outfile.close()
@@ -139,7 +143,7 @@ class SplitHandHistory:
         else:
             def separator(line): return self.re_SplitHands.search(line)
         file_str = StringIO()
-        print file_str.getvalue()
+        print(file_str.getvalue())
         for line in file:
             if separator(line+addendum):
                 if file_str.getvalue():

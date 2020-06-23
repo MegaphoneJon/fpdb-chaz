@@ -17,6 +17,8 @@
 
 ########################################################################
 
+from __future__ import print_function
+from builtins import object
 failure_list = []
 success_list = []
 verbose = False
@@ -77,16 +79,16 @@ def try_import(modulename):
 
 def success(message):
     if verbose:
-        print message
+        print(message)
     success_list.append(message)
 
 def failure(message):
     if verbose:
-        print _("Error:"), message
+        print(_("Error:"), message)
     failure_list.append(message)
 
 
-class ChooseLanguage:
+class ChooseLanguage(object):
      
     def __init__(self, win, language_dict):
         win.title("Choose a language for FPDB")
@@ -95,7 +97,7 @@ class ChooseLanguage:
         
         self.listbox.insert(END,("Use the system language settings"))
         self.listbox.insert(END,("en -- Always use English for FPDB"))
-        for key in sorted(language_dict.iterkeys()):
+        for key in sorted(language_dict.keys()):
             self.listbox.insert(END,(key + " -- " + language_dict[key]))
         self.listbox.pack(fill=BOTH, expand=1)
         self.listbox.select_set(0)
@@ -123,7 +125,7 @@ class ChooseLanguage:
 #  two messages because L10n not guaranteed to be available
 #
 
-from Tkinter import *
+from tkinter import *
 
 try:
     module = __import__("sys")

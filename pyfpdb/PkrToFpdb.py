@@ -18,6 +18,10 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import division
+from builtins import map
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -232,7 +236,7 @@ class Pkr(HandHistoryConverter):
                      # The hash is to cache the player names, and ignore
                      # The second round
         for a in m:
-            if players.has_key(a.group('PNAME')):
+            if a.group('PNAME') in players:
                 pass # Ignore
             else:
                 #print "DEBUG: addPlayer(%s, %s, %s)" % (a.group('SEAT'), a.group('PNAME'), a.group('CASH'))
@@ -284,15 +288,15 @@ class Pkr(HandHistoryConverter):
             if not re.search(r"^%(PLYR)s posts %(CUR)s(?P<SB>[%(NUM)s]+) dead$" %  subst, hand.handText, re.MULTILINE):
                 hand.addBlind(a.group('PNAME'), 'big blind', self.clearMoneyString(a.group('BB')))
             elif (bb==0):
-                hand.addBlind(a.group('PNAME'), 'secondsb', str(Decimal(hand.gametype['bb'])/2))
+                hand.addBlind(a.group('PNAME'), 'secondsb', str(old_div(Decimal(hand.gametype['bb']),2)))
             else:
-                hand.addBlind(a.group('PNAME'), 'both', str(bb + bb/2))
+                hand.addBlind(a.group('PNAME'), 'both', str(bb + old_div(bb,2)))
 
     def readHoleCards(self, hand):
 #    streets PREFLOP, PREDRAW, and THIRD are special cases beacause
 #    we need to grab hero's cards
         for street in ('PREFLOP', 'DEAL'):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 for found in m:
 #                    if m == None:

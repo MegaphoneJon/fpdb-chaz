@@ -15,6 +15,7 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from __future__ import print_function
 import L10n
 _ = L10n.get_translation()
 
@@ -171,7 +172,7 @@ class GuiAutoImport(QWidget):
         if site == 'PokerStars':
             directory = os.path.expanduser(defaults[site])
             for file in [file for file in os.listdir(directory) if not file in [".",".."]]:
-                print file
+                print(file)
         return False
 
     def startClicked(self):
@@ -218,7 +219,7 @@ class GuiAutoImport(QWidget):
                         command = [command, ] + string.split(self.settings['cl_options'])
                         bs = 1
 
-                        print _("opening pipe to HUD")
+                        print(_("opening pipe to HUD"))
                     try:
                         if self.config.install_method == "exe" or (os.name == "nt" and win32console.GetConsoleWindow() == 0):
                             self.pipe_to_hud = subprocess.Popen(command, bufsize=bs,

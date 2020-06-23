@@ -19,6 +19,9 @@
 
 ########################################################################
 
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -457,7 +460,7 @@ class iPoker(HandHistoryConverter):
         for a in m:
             if a.group('ATYPE') == '2':
                 blinds[int(a.group('ACT'))] = a.groupdict()
-        for b in sorted(blinds.iterkeys()):
+        for b in sorted(blinds.keys()):
             type = 'big blind'
             blind = blinds[b]
             if not hand.gametype['bb']:
@@ -479,14 +482,14 @@ class iPoker(HandHistoryConverter):
                 hand.gametype['sb'] = "1"
                 hand.gametype['bb'] = "2"
             elif hand.gametype['sb'] == None:
-                hand.gametype['sb'] = str(int(Decimal(hand.gametype['bb']))/2)
+                hand.gametype['sb'] = str(old_div(int(Decimal(hand.gametype['bb'])),2))
             elif hand.gametype['bb'] == None:
                 hand.gametype['bb'] = str(int(Decimal(hand.gametype['sb']))*2)
-            if int(Decimal(hand.gametype['bb']))/2 != int(Decimal(hand.gametype['sb'])):
-                if int(Decimal(hand.gametype['bb']))/2 < int(Decimal(hand.gametype['sb'])):
+            if old_div(int(Decimal(hand.gametype['bb'])),2) != int(Decimal(hand.gametype['sb'])):
+                if old_div(int(Decimal(hand.gametype['bb'])),2) < int(Decimal(hand.gametype['sb'])):
                     hand.gametype['bb'] = str(int(Decimal(hand.gametype['sb']))*2)
                 else:
-                    hand.gametype['sb'] = str(int(Decimal(hand.gametype['bb']))/2)
+                    hand.gametype['sb'] = str(old_div(int(Decimal(hand.gametype['bb'])),2))
 
     def readButton(self, hand):
         # Found in re_Player
@@ -497,7 +500,7 @@ class iPoker(HandHistoryConverter):
 #    we need to grab hero's cards
 
         for street in ('PREFLOP', 'DEAL'):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 for found in m:
                     player = found.group('PNAME')
@@ -508,7 +511,7 @@ class iPoker(HandHistoryConverter):
                     hand.addHoleCards(street, player, closed=cards, shown=True, mucked=False, dealt=True)
         
         
-        for street, text in hand.streets.iteritems():
+        for street, text in list(hand.streets.items()):
             if not text or street in ('PREFLOP', 'DEAL'): continue  # already done these
             m = self.re_HeroCards.finditer(hand.streets[street])
             for found in m:
@@ -538,7 +541,7 @@ class iPoker(HandHistoryConverter):
         actions = {}
         for a in m:
             actions[int(a.group('ACT'))] = a.groupdict()
-        for a in sorted(actions.iterkeys()):
+        for a in sorted(actions.keys()):
             action = actions[a]
             atype = action['ATYPE']
             player = action['PNAME']
@@ -576,7 +579,7 @@ class iPoker(HandHistoryConverter):
 
     def readCollectPot(self, hand):
         hand.setUncalledBets(self.uncalledbets)
-        for pname, pot in self.playerWinnings.iteritems():
+        for pname, pot in list(self.playerWinnings.items()):
             hand.addCollectPot(player=pname, pot=self.clearMoneyString(pot))
 
     def readShownCards(self, hand):

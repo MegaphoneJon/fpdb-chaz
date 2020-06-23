@@ -18,6 +18,11 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import print_function
+from __future__ import division
+from builtins import map
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -225,7 +230,7 @@ class Winamax(HandHistoryConverter):
             info['bb'] = mg['BB']
             
         if info['limitType'] == 'fl' and info['bb'] is not None:
-            info['sb'] = str((Decimal(mg['SB'])/2).quantize(Decimal("0.01")))
+            info['sb'] = str((old_div(Decimal(mg['SB']),2)).quantize(Decimal("0.01")))
             info['bb'] = str(Decimal(mg['SB']).quantize(Decimal("0.01")))
 
         return info
@@ -278,7 +283,7 @@ class Winamax(HandHistoryConverter):
                     #print "DEBUG: info['BIRAKE']: %s" % info['BIRAKE']
                     #print "DEBUG: info['BOUNTY']: %s" % info['BOUNTY']
                     for k in ['BIAMT','BIRAKE']:
-                        if k in info.keys() and info[k]:
+                        if k in list(info.keys()) and info[k]:
                             info[k] = info[k].replace(',','.')
 
                     if info['FREETICKET'] is not None:
@@ -352,7 +357,7 @@ class Winamax(HandHistoryConverter):
                 hand.addPlayer(int(a.group('SEAT')), a.group('PNAME'), a.group('CASH'))
                 plist[a.group('PNAME')] = [int(a.group('SEAT')), a.group('CASH')]
                 
-        if len(plist.keys()) < 2:
+        if len(list(plist.keys())) < 2:
             raise FpdbHandPartial(_("Less than 2 players in hand! %s.") % hand.handid)
 
     def markStreets(self, hand):
@@ -445,7 +450,7 @@ class Winamax(HandHistoryConverter):
         # streets PREFLOP, PREDRAW, and THIRD are special cases beacause
         # we need to grab hero's cards
         for street in ('PREFLOP', 'DEAL', 'BLINDSANTES'):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 for found in m:
                     newcards = [c for c in found.group('NEWCARDS').split(' ') if c != 'X']
@@ -456,7 +461,7 @@ class Winamax(HandHistoryConverter):
                         hand.addHoleCards(street, hand.hero, closed=newcards, shown=False, mucked=False, dealt=True)
                         log.debug(_("Hero cards %s: %s") % (hand.hero, newcards))
                     
-        for street, text in hand.streets.iteritems():
+        for street, text in list(hand.streets.items()):
             if not text or street in ('PREFLOP', 'DEAL', 'BLINDSANTES'): continue  # already done these
             m = self.re_HeroCards.finditer(hand.streets[street])
             for found in m:

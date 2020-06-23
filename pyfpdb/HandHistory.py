@@ -4,6 +4,7 @@
 
 Parses HandHistory xml files and returns requested objects.
 """
+from __future__ import print_function
 #    Copyright 2008-2011, Ray E. Barker
 #    
 #    This program is free software; you can redistribute it and/or modify
@@ -22,10 +23,11 @@ Parses HandHistory xml files and returns requested objects.
 
 ########################################################################
 #    Standard Library modules
+from builtins import object
 import xml.dom.minidom
 from   xml.dom.minidom import Node
 
-class HandHistory:
+class HandHistory(object):
     def __init__(self, xml_string, elements = ('ALL')):
 
         doc = xml.dom.minidom.parseString(xml_string)
@@ -47,7 +49,7 @@ class HandHistory:
                 a_player = Player(p)
                 self.PLAYERS[a_player.name] = a_player
 
-class Player:
+class Player(object):
     def __init__(self, node):
         self.name        = node.getAttribute('NAME')
         self.seat        = node.getAttribute('SEAT')
@@ -78,7 +80,7 @@ class Player:
                 (self.hand, self.start_cards)
         return temp
 
-class Awards:
+class Awards(object):
     def __init__(self, node):
         self.awards = []  # just an array of award objects
         for a in node.getElementsByTagName('AWARD'):
@@ -90,7 +92,7 @@ class Awards:
             temp = temp + "%s\n" % (a)
         return temp
 
-class Award:
+class Award(object):
     def __init__(self, node):
         self.player = node.getAttribute('PLAYER')
         self.amount = node.getAttribute('AMOUNT')
@@ -99,15 +101,15 @@ class Award:
     def __str__(self):
         return self.player + " won " + self.amount + " from " + self.pot
 
-class Game:
+class Game(object):
     def __init__(self, node):
-        print node
+        print(node)
         self.tags = {}
         for tag in ( ('GAME_NAME', 'game_name'), ('MAX', 'max'), ('HIGHLOW', 'high_low'),
                      ('STRUCTURE', 'structure'), ('MIXED', 'mixed') ):
             L = node.getElementsByTagName(tag[0])
             if (not L): continue
-            print L
+            print(L)
             for node2 in L:
                 title = ""
                 for node3 in node2.childNodes:
@@ -122,7 +124,7 @@ class Game:
                                            self.tags['max'],
                                            self.tags['game_name'])
 
-class Posts:
+class Posts(object):
     def __init__(self, node):
         self.posts = []  # just an array of post objects
         for p in node.getElementsByTagName('POST'):
@@ -134,7 +136,7 @@ class Posts:
             temp = temp + "%s\n" % (p)
         return temp
 
-class Post:
+class Post(object):
     def __init__(self, node):
         self.player = node.getAttribute('PLAYER')
         self.amount = node.getAttribute('AMOUNT')
@@ -144,7 +146,7 @@ class Post:
     def __str__(self):
         return ("%s posted %s %s %s") % (self.player, self.amount, self.posted, self.live)
 
-class Betting:
+class Betting(object):
     def __init__(self, node):
         self.rounds = []  # a Betting object is just an array of rounds
         for r in node.getElementsByTagName('ROUND'):
@@ -156,7 +158,7 @@ class Betting:
             temp = temp + "%s\n" % (r)
         return temp
 
-class Round:
+class Round(object):
     def __init__(self, node):
         self.name = node.getAttribute('ROUND_NAME')
         self.action = []
@@ -169,7 +171,7 @@ class Round:
             temp = temp + "    %s\n" % (a)
         return temp
 
-class Action:
+class Action(object):
     def __init__(self, node):
         self.player = node.getAttribute('PLAYER')
         self.action = node.getAttribute('ACT')
@@ -184,12 +186,12 @@ if __name__== "__main__":
     xml_string = file.read()
     file.close()
     
-    print xml_string + "\n\n\n"
+    print(xml_string + "\n\n\n")
     h = HandHistory(xml_string, ('ALL'))
-    print h.GAME
-    print h.POSTS
-    print h.BETTING
-    print h.AWARDS
+    print(h.GAME)
+    print(h.POSTS)
+    print(h.BETTING)
+    print(h.AWARDS)
     
-    for p in h.PLAYERS.keys():
-        print h.PLAYERS[p]
+    for p in list(h.PLAYERS.keys()):
+        print(h.PLAYERS[p])

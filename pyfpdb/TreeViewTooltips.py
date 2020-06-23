@@ -93,8 +93,12 @@ pointer leaves the cell (or column, or row, or view, depending on how
 get_tooltip() is implemented).
 
 '''
+from __future__ import division
 
 
+from builtins import str
+from builtins import object
+from past.utils import old_div
 import pygtk
 pygtk.require('2.0')
 
@@ -113,7 +117,7 @@ if gtk.gtk_version < (2, 8):
 # major, minor, patch
 version = 1, 0, 0
 
-class TreeViewTooltips:
+class TreeViewTooltips(object):
 
     def __init__(self):
         
@@ -277,7 +281,7 @@ class TreeViewTooltips:
         and 4 pixels below it.
         '''
 
-        return x - w/2, y + 4
+        return x - old_div(w,2), y + 4
 
     def add_view(self, view):
 
@@ -293,7 +297,7 @@ class TreeViewTooltips:
     def get_tooltip(self, view, column, path):
         'See the module doc string for a description of this method'
         
-        raise NotImplemented, 'Subclass must implement get_tooltip()'
+        raise NotImplemented('Subclass must implement get_tooltip()')
 
 
 if __name__ == '__main__':
@@ -345,7 +349,7 @@ if __name__ == '__main__':
             return x + 10, y - (h + 10)
 
     # Here's our customer
-    class Customer:
+    class Customer(object):
 
         def __init__(self, fname, lname, phone, notes):
             self.fname = fname

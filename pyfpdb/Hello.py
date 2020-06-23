@@ -4,6 +4,7 @@
 
 Hello World demostration for Aux_Window.
 """
+from __future__ import print_function
 #    Copyright 2009-2012, Ray E. Barker
 #    
 #    This program is free software; you can redistribute it and/or modify
@@ -66,7 +67,7 @@ class Hello_plus(Aux_Window):
 
 #    get the site we are playing from the HUD
         self.site = hud.site
-        print "site =", hud.site # print it to the terminal, to make sure
+        print("site =", hud.site) # print it to the terminal, to make sure
 
 #    now get our screen name for that site from the configuration
 #    wrap it in a try/except in case screen name isn't set up in the config file
@@ -75,7 +76,7 @@ class Hello_plus(Aux_Window):
             self.hero = site_params['screen_name']
         except:
             self.hero = 'YOUR NAME HERE'
-        print "hero =", self.hero
+        print("hero =", self.hero)
 
 
     def create(self):

@@ -16,7 +16,10 @@
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
 """pokerstars-specific summary parsing code"""
+from __future__ import division
 
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -245,7 +248,7 @@ class FullTiltPokerSummary(TourneySummary):
                     m6 = self.re_WinningsXLS.finditer(entry['addons'])
                     for a6 in m6:
                         addOnAmt += int(100*Decimal(self.clearMoneyString(a6.group('WINNINGS'))))
-                    addOnCount = addOnAmt/self.addOnCost
+                    addOnCount = old_div(addOnAmt,self.addOnCost)
                 else:
                     addOnCount = None
                     
@@ -254,7 +257,7 @@ class FullTiltPokerSummary(TourneySummary):
                     m7 = self.re_WinningsXLS.finditer(entry['rebuys'])
                     for a7 in m7:
                         rebuyAmt += int(100*Decimal(self.clearMoneyString(a7.group('WINNINGS'))))
-                    rebuyCount = rebuyAmt/self.rebuyCost
+                    rebuyCount = old_div(rebuyAmt,self.rebuyCost)
                 else:
                     rebuyCount = None
                     
@@ -515,7 +518,7 @@ class FullTiltPokerSummary(TourneySummary):
         if n.group('STEPNO')!=None:
             self.stepNo = int(n.group('STEPNO'))
         if self.isMatrix and self.entries > 0:
-            self.buyin = self.prizepool / self.entries
+            self.buyin = old_div(self.prizepool, self.entries)
             buyinfee = int(100*Decimal(self.clearMoneyString(n.group('BUYINGUAR'))))
             self.fee = buyinfee - self.buyin
             self.isSng = True

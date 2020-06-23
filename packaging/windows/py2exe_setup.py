@@ -5,6 +5,7 @@
 
 Py2exe script for fpdb.
 """
+from __future__ import print_function
 #    Copyright 2009-2011,  Ray E. Barker
 #    
 #    This program is free software; you can redistribute it and/or modify
@@ -49,13 +50,13 @@ import sys
 
 # get out now if parameter not passed
 try: 
-    sys.argv[1] <> ""
+    sys.argv[1] != ""
 except: 
-    print "A parameter is required, quitting now"
+    print("A parameter is required, quitting now")
     quit()
 
-if sys.argv[1] <> "py2exe":
-    print "Parameter 1 is not valid, quitting now"
+if sys.argv[1] != "py2exe":
+    print("Parameter 1 is not valid, quitting now")
     quit()
 
 from distutils.core import setup
@@ -78,7 +79,7 @@ def test_and_remove(top):
         if os.path.isdir(top):
             remove_tree(top)
         else:
-            print "Unexpected file '"+top+"' found. Exiting."
+            print("Unexpected file '"+top+"' found. Exiting.")
             exit()
     else:
         "oops folder not found"
@@ -91,7 +92,7 @@ def remove_tree(top):
     # sc: Nicked this from somewhere, added the if statement to try 
     #     make it a bit safer
     if (top in ('build','dist') or top.startswith(distdir)) and os.path.basename(os.getcwd()) == 'windows':
-        print "removing directory '"+top+"' ..."
+        print("removing directory '"+top+"' ...")
         for root, dirs, files in os.walk(top, topdown=False):
             for name in files:
                 os.remove(os.path.join(root, name))
@@ -102,13 +103,13 @@ def remove_tree(top):
 def copy_tree(source,destination):
     source = source.replace('\\', '\\\\')
     destination = destination.replace('\\', '\\\\')
-    print "*** Copying " + source + " to " + destination + " ***"
+    print("*** Copying " + source + " to " + destination + " ***")
     shutil.copytree( source, destination )
 
 def copy_file(source,destination):
     source = source.replace('\\', '\\\\')
     destination = destination.replace('\\', '\\\\')
-    print "*** Copying " + source + " to " + destination + " ***"
+    print("*** Copying " + source + " to " + destination + " ***")
     shutil.copy( source, destination )
 
 
@@ -126,20 +127,20 @@ tofpdb_module_list = [os.path.splitext(filename)[0] for filename in tofpdb_file_
 summary_module_list = [os.path.splitext(filename)[0] for filename in summary_file_list]
 fpdb_aux_module_list = ['Hello','Aux_Hud','Aux_Classic_Hud','Mucked']
 
-print "\n" + r"Output will be created in "+distdir
+print("\n" + r"Output will be created in "+distdir)
 
-print "*** Cleaning working folders ***"
+print("*** Cleaning working folders ***")
 test_and_remove('dist')
 test_and_remove('build')
 test_and_remove(distdir)
 
-print "compiling fpdb_folder_check.exe"
+print("compiling fpdb_folder_check.exe")
 
 returncode=os.system("gcc  fpdb_folder_check.c -o fpdb_folder_check.exe")
-if returncode <> 0:
+if returncode != 0:
     quit()
 
-print "*** Building now in dist folder ***"
+print("*** Building now in dist folder ***")
 
 origIsSystemDLL = py2exe.build_exe.isSystemDLL
 py2exe.build_exe.isSystemDLL = isSystemDLL
@@ -180,7 +181,7 @@ setup(
                  ] + matplotlib.get_py2exe_datafiles()
 )
 
-print "*** py2exe build phase complete ***"
+print("*** py2exe build phase complete ***")
 
 # copy zone info, fpdb translation folders and cards folders
 copy_tree (r'c:\python27\Lib\site-packages\pytz\zoneinfo', os.path.join(r'dist', 'zoneinfo'))
@@ -192,7 +193,7 @@ copy_tree (gfxdir, os.path.join(distdir, 'gfx'))
 copy_file (packagedir+'run_fpdb.bat', distdir)
 copy_file (packagedir+'install_fpdb.bat', distdir)
 
-print "*** Renaming dist folder as pyfpdb folder ***"
+print("*** Renaming dist folder as pyfpdb folder ***")
 dest = os.path.join(distdir, 'pyfpdb')
 os.rename( 'dist', dest )
 
@@ -200,10 +201,10 @@ copy_file (packagedir+'fpdb_folder_check.exe', dest)
 
 gtk_dir = "C:/Python27/Lib/site-packages/gtk-2.0/runtime/"
 while not os.path.exists(gtk_dir):
-    print "Enter directory name for GTK (e.g. c:/gtk) : ",     # the comma means no newline
+    print("Enter directory name for GTK (e.g. c:/gtk) : ", end=' ')     # the comma means no newline
     gtk_dir = sys.stdin.readline().rstrip()
 
-print "*** copying GTK runtime from ", gtk_dir
+print("*** copying GTK runtime from ", gtk_dir)
 dest = os.path.join(distdir, 'pyfpdb')
 copy_file(os.path.join(gtk_dir, 'bin', 'libgdk-win32-2.0-0.dll'), dest )
 copy_file(os.path.join(gtk_dir, 'bin', 'libgobject-2.0-0.dll'), dest)
@@ -215,16 +216,16 @@ copy_tree(os.path.join(gtk_dir, 'etc'), os.path.join(dest, 'etc'))
 copy_tree(os.path.join(gtk_dir, 'lib'), os.path.join(dest, 'lib'))
 copy_tree(os.path.join(gtk_dir, 'share'), os.path.join(dest, 'share'))
 
-print "*** Activating MS-Windows GTK theme ***"
+print("*** Activating MS-Windows GTK theme ***")
 gtkrc = open(os.path.join(distdir, 'pyfpdb', 'etc', 'gtk-2.0', 'gtkrc'), 'w')
-print >>gtkrc, 'gtk-theme-name = "MS-Windows"'
-print >>gtkrc, 'gtk-tooltip-timeout = 1750'
+print('gtk-theme-name = "MS-Windows"', file=gtkrc)
+print('gtk-tooltip-timeout = 1750', file=gtkrc)
 gtkrc.close()
 
-print "*** deleting temporary build folder ***"
+print("*** deleting temporary build folder ***")
 test_and_remove('build')
 
-print "*** deleting folders to shrink package size ***"
+print("*** deleting folders to shrink package size ***")
 test_and_remove(os.path.join(distdir, 'pyfpdb', 'lib', 'glib-2.0'))
 test_and_remove(os.path.join(distdir, 'pyfpdb', 'lib', 'gtk-2.0','include'))
 test_and_remove(os.path.join(distdir, 'pyfpdb', 'lib', 'pkgconfig'))
@@ -240,7 +241,7 @@ test_and_remove(os.path.join(distdir, 'pyfpdb', 'share', 'icon-naming-utils'))
 test_and_remove(os.path.join(distdir, 'pyfpdb', 'share', 'icons', 'Tango'))
 test_and_remove(os.path.join(distdir, 'pyfpdb', 'share', 'xml'))
 
-print "***++++++++++++++++++++++++++++++++++++++++++++++"
-print "All done!"
-print "The distribution folder "+distdir+" is in the pyfpdb dir"
-print "***++++++++++++++++++++++++++++++++++++++++++++++"
+print("***++++++++++++++++++++++++++++++++++++++++++++++")
+print("All done!")
+print("The distribution folder "+distdir+" is in the pyfpdb dir")
+print("***++++++++++++++++++++++++++++++++++++++++++++++")

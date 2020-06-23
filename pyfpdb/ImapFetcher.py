@@ -16,6 +16,7 @@
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
 """This file is to fetch summaries through IMAP and pass them on to the appropriate parser"""
+from __future__ import print_function
 #see http://docs.python.org/library/imaplib.html for the python interface
 #see http://tools.ietf.org/html/rfc2060#section-6.4.4 for IMAP4 search criteria
 
@@ -80,7 +81,7 @@ def run(config, db):
                 raise error #TODO: show error message
             neededMessages.append(("PS", messageNumber))
 
-        print _("Found %s eMails to fetch") %(len(neededMessages))
+        print(_("Found %s eMails to fetch") %(len(neededMessages)))
 
         if (len(neededMessages)==0):
             raise error #TODO: show error message
@@ -100,15 +101,15 @@ def run(config, db):
        # finally:
         #    pass
         server.logout()
-        print _("Finished downloading emails.")
+        print(_("Finished downloading emails."))
 
         errors = 0
         if len(email_bodies) > 0:
             errors = importSummaries(db, config, email_bodies, options = None)
         else:
-            print _("No Tournament summaries found.")
+            print(_("No Tournament summaries found."))
 
-        print(_("Errors:"), errors)
+        print((_("Errors:"), errors))
 
 def readFile(filename, options):
     codepage = ["utf8"]
@@ -147,16 +148,16 @@ def importSummaries(db, config, summaries, options = None):
         elif options.hhc == "Full Tilt Poker":
             summaryTexts=(splitFullTiltSummaries(summaryText))
 
-        print "Found %s summaries in email" %(len(summaryTexts))
+        print("Found %s summaries in email" %(len(summaryTexts)))
         for j, summaryText in enumerate(summaryTexts, start=1):
             try:
                 if options == None or options.hhc == "PokerStars":
                     PokerStarsSummary.PokerStarsSummary(db=db, config=config, siteName=u"PokerStars", summaryText=summaryText, builtFrom = "IMAP")
                 elif options.hhc == "Full Tilt Poker":
                     FullTiltPokerSummary.FullTiltPokerSummary(db=db, config=config, siteName=u"Fulltilt", summaryText=summaryText, builtFrom = "IMAP")
-            except FpdbParseError, e:
+            except FpdbParseError as e:
                 errors += 1
-            print _("Finished importing %s/%s tournament summaries") %(j, len(summaryTexts))
+            print(_("Finished importing %s/%s tournament summaries") %(j, len(summaryTexts)))
 
     return errors
 
@@ -169,11 +170,11 @@ def main(argv=None):
 
     if options.usage == True:
         #Print usage examples and exit
-        print _("USAGE:")
+        print(_("USAGE:"))
         sys.exit(0)
 
     if options.hhc == "PokerStarsToFpdb":
-        print _("Need to define a converter")
+        print(_("Need to define a converter"))
         exit(0)
 
     Configuration.set_logfile("fpdb-log.txt")

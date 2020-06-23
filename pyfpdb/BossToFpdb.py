@@ -18,6 +18,9 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -171,7 +174,7 @@ class Boss(HandHistoryConverter):
                     log.error(_("BossToFpdb.determineGameType: Lim_Blinds has no lookup for '%s' - '%s'") % (mg['BB'], tmp))
                     raise FpdbParseError
             else:
-                info['sb'] = str((Decimal(mg['SB'])/2).quantize(Decimal("0.01")))
+                info['sb'] = str((old_div(Decimal(mg['SB']),2)).quantize(Decimal("0.01")))
                 info['bb'] = str(Decimal(mg['SB']).quantize(Decimal("0.01")))
         return info
 
@@ -298,7 +301,7 @@ class Boss(HandHistoryConverter):
 #    streets PREFLOP, PREDRAW, and THIRD are special cases beacause
 #    we need to grab hero's cards
         for street in ('PREFLOP', 'DEAL'):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 newcards = []
                 for found in m:
@@ -430,12 +433,12 @@ class Boss(HandHistoryConverter):
     def calculateAntes(self, street, hand):
         if street in ('PREFLOP', 'DEAL'):
             contributed = sum(hand.pot.committed.values()) + sum(hand.pot.common.values())
-            committed = sorted([ (v,k) for (k,v) in hand.pot.committed.items()])
+            committed = sorted([ (v,k) for (k,v) in list(hand.pot.committed.items())])
             try:
                 lastbet = committed[-1][0] - committed[-2][0]
                 if lastbet > 0: # uncalled
                     contributed -= lastbet
-            except IndexError, e:
+            except IndexError as e:
                 log.error(_("BossToFpdb.calculateAntes(): '%s': Major failure while calculating pot: '%s'") % (self.handid, e))
                 raise FpdbParseError
             if street=='DEAL':
@@ -446,7 +449,7 @@ class Boss(HandHistoryConverter):
                 m = self.re_ShowDownPot.search(hand.handText)
             if m:
                 pot = Decimal(m.groupdict()['POT'])
-                ante = (pot-contributed)/len(hand.players)
+                ante = old_div((pot-contributed),len(hand.players))
                 for player in hand.players:
                     if ante>0:
                         hand.addAnte(player[1], str(ante))

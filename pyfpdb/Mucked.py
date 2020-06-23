@@ -4,6 +4,8 @@
 
 Mucked cards display for FreePokerTools HUD.
 """
+from __future__ import print_function
+from __future__ import division
 #    Copyright 2008-2012,  Ray E. Barker
 #    
 #    This program is free software; you can redistribute it and/or modify
@@ -22,6 +24,10 @@ Mucked cards display for FreePokerTools HUD.
 
 ########################################################################
 
+from builtins import map
+from builtins import range
+from builtins import object
+from past.utils import old_div
 import L10n
 _ = L10n.init_translation()
 
@@ -87,7 +93,7 @@ class Stud_mucked(Aux_Base.Aux_Window):
         self.mucked_cards.update_gui(new_hand_id)
         self.mucked_list.update_gui(new_hand_id)
         
-class Stud_list:
+class Stud_list(object):
     def __init__(self, parent, params, config, hero):
 
         self.parent     = parent
@@ -112,12 +118,12 @@ class Stud_list:
         self.winners = db_connection.get_winners_from_hand(new_hand_id)
         pot = 0
         winners = ''
-        for player in self.winners.keys():
+        for player in list(self.winners.keys()):
             pot = pot + int(self.winners[player])
             if not winners == '':
                 winners = winners + ", "
             winners = winners + player
-        pot_dec = "%.2f" % (float(pot)/100)
+        pot_dec = "%.2f" % (old_div(float(pot),100))
 
         hero_cards = self.get_hero_cards(self.parent.hero)
         self.info_row = ((new_hand_id, hero_cards, pot_dec, winners), )
@@ -128,7 +134,7 @@ class Stud_list:
             return "xxxxxx"
         else:
             # find the hero's seat from the stat_dict
-            for stat in self.parent.hud.stat_dict.itervalues():
+            for stat in list(self.parent.hud.stat_dict.values()):
                 if stat['screen_name'] == hero:
                     return Card.valueSuitFromCard(self.parent.hud.cards[stat['seat']][0]) +\
                            Card.valueSuitFromCard(self.parent.hud.cards[stat['seat']][1]) +\
@@ -136,11 +142,11 @@ class Stud_list:
         return "xxxxxx"
             
     def update_gui(self, new_hand_id):
-        self.liststore.appendRow(map(QStandardItem, self.info_row[0]))
+        self.liststore.appendRow(list(map(QStandardItem, self.info_row[0])))
         self.treeview.resizeColumnsToContents()
         self.treeview.horizontalHeader().setStretchLastSection(True)
 
-class Stud_cards:
+class Stud_cards(object):
     def __init__(self, parent, params, config):
 
         self.parent    = parent
@@ -188,23 +194,23 @@ class Stud_cards:
     def update_data(self, new_hand_id, db_connection):
         self.tips = []
         action = db_connection.get_action_from_hand(new_hand_id)
-        print action
+        print(action)
         for street in action:
             temp = ''
             for act in street:
                 temp = temp + act[0] + " " + act[1] + "s "
                 if act[2] > 0:
                     if act[2]%100 > 0:
-                        temp = temp + "%4.2f\n" % (float(act[2])/100)
+                        temp = temp + "%4.2f\n" % (old_div(float(act[2]),100))
                     else:
-                        temp = temp + "%d\n" % (act[2]/100) 
+                        temp = temp + "%d\n" % (old_div(act[2],100)) 
                 else:
                     temp = temp + "\n"
             self.tips.append(temp)
 
     def update_gui(self, new_hand_id):
         self.clear()
-        for c, cards in self.parent.hud.cards.iteritems():
+        for c, cards in list(self.parent.hud.cards.items()):
             if c == 'common': continue
             self.grid_contents[(1, c - 1)].setText(self.get_screen_name(c))
             for i in ((0, cards[0]), (1, cards[1]), (2, cards[2]), (3, cards[3]), 
@@ -228,7 +234,7 @@ class Stud_cards:
 
     def get_screen_name(self, seat_no):
         """Gets and returns the screen name from stat_dict, given seat number."""
-        for k in self.parent.hud.stat_dict.keys():
+        for k in list(self.parent.hud.stat_dict.keys()):
             if self.parent.hud.stat_dict[k]['seat'] == seat_no:
                 return self.parent.hud.stat_dict[k]['screen_name']
         return _("No Name")
@@ -324,7 +330,7 @@ class Flop_Mucked(Aux_Base.Aux_Seats, QObject):
     def save_layout(self, *args):
         """Save new common position back to the layout element in the config file."""
         new_locs = {}
-        for (i, pos) in self.positions.iteritems():
+        for (i, pos) in list(self.positions.items()):
             if i == 'common':
                 new_locs[i] = ((pos[0]), (pos[1]))
             else:

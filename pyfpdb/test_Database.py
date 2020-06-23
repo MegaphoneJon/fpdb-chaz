@@ -15,6 +15,7 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from __future__ import print_function
 import sqlite3
 import Database
 import math
@@ -59,10 +60,10 @@ def testSQLiteFloorFunction():
         cur.execute("INSERT INTO test(i) values(%f)" % var)
     cur.execute("SELECT floor(i) from test")
     result = cur.fetchall()
-    print "DEBUG: result: %s" % result
+    print("DEBUG: result: %s" % result)
     answer = 0
     for i in result:
-        print "DEBUG: int(var): %s" % int(i[0])
+        print("DEBUG: int(var): %s" % int(i[0]))
         assert answer == int(i[0])
         answer = answer + 1
     cur.execute("DROP TABLE test")
@@ -76,7 +77,7 @@ def testSQLiteModFunction():
     result = cur.fetchall()
     idx = 0
     for i in result:
-        print "DEBUG: int(var): %s" % i[0]
+        print("DEBUG: int(var): %s" % i[0])
         assert vars[idx]%13 == int(i[0])
         idx = idx+1
 

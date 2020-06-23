@@ -17,6 +17,12 @@
 
 # Note that this now contains the replayer only! The list of hands has been moved to GuiHandViewer by zarturo.
 
+from __future__ import print_function
+from __future__ import division
+from builtins import str
+from builtins import range
+from builtins import object
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -133,16 +139,16 @@ class GuiReplayer(QWidget):
 
         state = self.states[self.stateSlider.value()]
 
-        communityLeft = int(self.tableImage.width() / 2 - 2.5 * self.cardwidth)
-        communityTop = int(self.tableImage.height() / 2 - 1.75 * self.cardheight)
+        communityLeft = int(old_div(self.tableImage.width(), 2) - 2.5 * self.cardwidth)
+        communityTop = int(old_div(self.tableImage.height(), 2) - 1.75 * self.cardheight)
 
-        convertx = lambda x: int(x * self.tableImage.width() * 0.8) + self.tableImage.width() / 2
-        converty = lambda y: int(y * self.tableImage.height() * 0.6) + self.tableImage.height() / 2
+        convertx = lambda x: int(x * self.tableImage.width() * 0.8) + old_div(self.tableImage.width(), 2)
+        converty = lambda y: int(y * self.tableImage.height() * 0.6) + old_div(self.tableImage.height(), 2)
 
-        for player in state.players.values():
+        for player in list(state.players.values()):
             playerx = convertx(player.x)
             playery = converty(player.y)
-            painter.drawImage(QPoint(playerx - self.playerBackdrop.width() / 2, playery - 3), self.playerBackdrop)
+            painter.drawImage(QPoint(playerx - old_div(self.playerBackdrop.width(), 2), playery - 3), self.playerBackdrop)
             if player.action=="folds":
                 painter.setPen(QColor("grey"))
             else:
@@ -173,8 +179,8 @@ class GuiReplayer(QWidget):
         painter.setPen(QColor("white"))
 
         if state.pot > 0:
-            painter.drawText(QRect(self.tableImage.width() / 2 - 100,
-                                   self.tableImage.height() / 2 - 20,
+            painter.drawText(QRect(old_div(self.tableImage.width(), 2) - 100,
+                                   old_div(self.tableImage.height(), 2) - 20,
                                    200,
                                    40),
                              Qt.AlignCenter,
@@ -218,7 +224,7 @@ class GuiReplayer(QWidget):
         seenStreets = []
         for street in hand.allStreets:
             if state.called > 0:
-                for player in state.players.values():
+                for player in list(state.players.values()):
                     if player.stack == 0:
                         state.allin = True
                         break
@@ -237,7 +243,7 @@ class GuiReplayer(QWidget):
         self.states.append(state)
 
         # Clear and repopulate the row of buttons
-        for idx in reversed(range(self.buttonBox.count())):
+        for idx in reversed(list(range(self.buttonBox.count()))):
             self.buttonBox.takeAt(idx).widget().setParent(None)
         self.buttonBox.addWidget(self.prevButton)
         self.prevButton.setEnabled(self.handidx > 0)
@@ -306,7 +312,7 @@ class GuiReplayer(QWidget):
 # ICM code originally grabbed from http://svn.gna.org/svn/pokersource/trunk/icm-calculator/icm-webservice.py
 # Copyright (c) 2008 Thomas Johnson <tomfmason@gmail.com>
 
-class ICM:
+class ICM(object):
     def __init__(self, stacks, payouts):
         self.stacks = stacks
         self.payouts = payouts
@@ -324,12 +330,12 @@ class ICM:
             for stack in self.stacks:
                 if i != player and stack > 0.0:
                     self.stacks[i] = 0.0
-                    eq += self.getEquities((total - stack), player, (depth + 1)) * (stack / D(total))
+                    eq += self.getEquities((total - stack), player, (depth + 1)) * (old_div(stack, D(total)))
                     self.stacks[i] = stack
                 i += 1
         return eq
 
-class TableState:
+class TableState(object):
     def __init__(self, hand):
         self.pot = Decimal(0)
         self.street = None
@@ -357,7 +363,7 @@ class TableState:
 
         self.renderBoard.add(phase)
 
-        for player in self.players.values():
+        for player in list(self.players.values()):
             player.justacted = False
             if player.chips > self.called:
                 player.stack += player.chips - self.called
@@ -371,7 +377,7 @@ class TableState:
         self.allinThisStreet = False
 
     def updateForAction(self, action):
-        for player in self.players.values():
+        for player in list(self.players.values()):
             player.justacted = False
 
         player = self.players[action[0]]
@@ -413,27 +419,27 @@ class TableState:
             player.chips += action[2]
             player.stack -= action[2]
         else:
-            print "unhandled action: " + str(action)
+            print("unhandled action: " + str(action))
 
         if player.stack == 0:
             self.allinThisStreet = True
 
     def endHand(self, collectees, returned):
         self.pot = Decimal(0)
-        for player in self.players.values():
+        for player in list(self.players.values()):
             player.justacted = False
             player.chips = Decimal(0)
             if self.gamebase == 'draw':
                 player.holecards = player.streetcards[self.street]
-        for name,amount in collectees.items():
+        for name,amount in list(collectees.items()):
             player = self.players[name]
             player.chips += amount
             player.action = "collected"
             player.justacted = True
-        for name, amount in returned.items():
+        for name, amount in list(returned.items()):
             self.players[name].stack += amount
 
-class Player:
+class Player(object):
     def __init__(self, hand, name, stack, seat):
         self.stack     = Decimal(stack)
         self.chips     = Decimal(0)

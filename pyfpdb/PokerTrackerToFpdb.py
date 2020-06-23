@@ -18,6 +18,9 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -280,7 +283,7 @@ class PokerTracker(HandHistoryConverter):
                     raise FpdbParseError
             else:
                 sb = self.clearMoneyString(mg['SB'])
-                info['sb'] = str((Decimal(sb)/2).quantize(Decimal("0.01")))
+                info['sb'] = str((old_div(Decimal(sb),2)).quantize(Decimal("0.01")))
                 info['bb'] = str(Decimal(sb).quantize(Decimal("0.01")))
 
         return info
@@ -498,7 +501,7 @@ class PokerTracker(HandHistoryConverter):
                 hand.gametype['bb'] = bb
                 hand.addBlind(a.group('PNAME'), 'big blind', bb)
             else:
-                both = Decimal(hand.gametype['bb']) + Decimal(hand.gametype['bb'])/2
+                both = Decimal(hand.gametype['bb']) + old_div(Decimal(hand.gametype['bb']),2)
                 if both == Decimal(a.group('BB')):
                     hand.addBlind(a.group('PNAME'), 'both', bb)
                 else:
@@ -510,7 +513,7 @@ class PokerTracker(HandHistoryConverter):
                     hand.addBlind(a.group('PNAME'), 'secondsb', self.clearMoneyString(a.group('SBBB')))
                 else:
                     bet = self.clearMoneyString(a.group('SBBB'))
-                    amount = str(Decimal(bet) + Decimal(bet)/2)
+                    amount = str(Decimal(bet) + old_div(Decimal(bet),2))
                     hand.addBlind(a.group('PNAME'), 'both', amount)
             for a in self.re_Action2.finditer(self.re_Hole.split(hand.handText)[0]):
                 if a.group('ATYPE') == ' went all-in':
@@ -538,14 +541,14 @@ class PokerTracker(HandHistoryConverter):
                 hand.gametype['sb'] = "1"
                 hand.gametype['bb'] = "2"
             elif hand.gametype['sb'] == None:
-                hand.gametype['sb'] = str(int(Decimal(hand.gametype['bb']))/2)
+                hand.gametype['sb'] = str(old_div(int(Decimal(hand.gametype['bb'])),2))
             elif hand.gametype['bb'] == None:
                 hand.gametype['bb'] = str(int(Decimal(hand.gametype['sb']))*2)
-            if int(Decimal(hand.gametype['bb']))/2 != int(Decimal(hand.gametype['sb'])):
-                if int(Decimal(hand.gametype['bb']))/2 < int(Decimal(hand.gametype['sb'])):
+            if old_div(int(Decimal(hand.gametype['bb'])),2) != int(Decimal(hand.gametype['sb'])):
+                if old_div(int(Decimal(hand.gametype['bb'])),2) < int(Decimal(hand.gametype['sb'])):
                     hand.gametype['bb'] = str(int(Decimal(hand.gametype['sb']))*2)
                 else:
-                    hand.gametype['sb'] = str(int(Decimal(hand.gametype['bb']))/2)
+                    hand.gametype['sb'] = str(old_div(int(Decimal(hand.gametype['bb'])),2))
 
     def readHoleCards(self, hand):
 #    streets PREFLOP, PREDRAW, and THIRD are special cases beacause
@@ -555,7 +558,7 @@ class PokerTracker(HandHistoryConverter):
         else:
             re_HeroCards = self.re_HeroCards2
         for street in ('PREFLOP', 'DEAL'):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = re_HeroCards.finditer(hand.streets[street])
                 for found in m:
 #                    if m == None:
@@ -570,7 +573,7 @@ class PokerTracker(HandHistoryConverter):
                         newcards = [c.replace('10', 'T').strip() for c in found.group('NEWCARDS').split(' ')]
                     hand.addHoleCards(street, hand.hero, closed=newcards, shown=False, mucked=False, dealt=True)
 
-        for street, text in hand.streets.iteritems():
+        for street, text in list(hand.streets.items()):
             if not text or street in ('PREFLOP', 'DEAL'): continue  # already done these
             m = re_HeroCards.finditer(hand.streets[street])
             for found in m:

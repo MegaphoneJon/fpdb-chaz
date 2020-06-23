@@ -15,10 +15,14 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
-import Queue
+import queue
 
 from PyQt5.QtGui import (QStandardItem, QStandardItemModel)
 from PyQt5.QtWidgets import (QApplication, QDialog, QPushButton, QHBoxLayout, QRadioButton,
@@ -121,7 +125,7 @@ class GuiLogView(QWidget):
         # guesstimate number of lines in file
         if os.path.exists(self.logfile):
             stat_info = os.stat(self.logfile)
-            lines = stat_info.st_size / EST_CHARS_PER_LINE
+            lines = old_div(stat_info.st_size, EST_CHARS_PER_LINE)
 
             # set startline to line number to start display from
             startline = 0

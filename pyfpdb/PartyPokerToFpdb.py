@@ -18,6 +18,11 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import division
+from builtins import filter
+from builtins import map
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -210,7 +215,7 @@ class PartyPoker(HandHistoryConverter):
         list = HandHistoryConverter.allHandsAsList(self)
         if list is None:
             return []
-        return filter(lambda text: len(text.strip()), list)
+        return [text for text in list if len(text.strip())]
 
     def compilePlayerRegexs(self,  hand):
         players = set([player[1] for player in hand.players])
@@ -354,10 +359,10 @@ class PartyPoker(HandHistoryConverter):
             else:
                 try:
                     if Decimal(mg['CASHBI']) >= 10000:
-                        nl_bb = str((Decimal(mg['CASHBI'])/100).quantize(Decimal("0.01")))
+                        nl_bb = str((old_div(Decimal(mg['CASHBI']),100)).quantize(Decimal("0.01")))
                         info['buyinType'] = 'deep'
                     else:
-                        nl_bb = str((Decimal(mg['CASHBI'])/50).quantize(Decimal("0.01")))
+                        nl_bb = str((old_div(Decimal(mg['CASHBI']),50)).quantize(Decimal("0.01")))
                         info['buyinType'] = 'regular'
                     info['sb'] = self.Lim_Blinds[nl_bb][0]
                     info['bb'] = self.Lim_Blinds[nl_bb][1]
@@ -407,7 +412,7 @@ class PartyPoker(HandHistoryConverter):
                     log.error(_("PartyPokerToFpdb.determineGameType: Lim_Blinds has no lookup for '%s' - '%s'") % (mg['BB'], tmp))
                     raise FpdbParseError
             else:
-                info['sb'] = str((Decimal(mg['SB'])/2).quantize(Decimal("0.01")))
+                info['sb'] = str((old_div(Decimal(mg['SB']),2)).quantize(Decimal("0.01")))
                 info['bb'] = str(Decimal(mg['SB']).quantize(Decimal("0.01")))
         #print "DEUBG: DGT.info: %s" % info
         return info
@@ -715,14 +720,14 @@ class PartyPoker(HandHistoryConverter):
     def readHoleCards(self, hand):
         # we need to grab hero's cards
         for street in ('PREFLOP',):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 for found in m:
                     hand.hero = found.group('PNAME')
                     newcards = renderCards(found.group('NEWCARDS'))
                     hand.addHoleCards(street, hand.hero, closed=newcards, shown=False, mucked=False, dealt=True)
                     
-        for street, text in hand.streets.iteritems():
+        for street, text in list(hand.streets.items()):
             if not text or street in ('PREFLOP', 'DEAL'): continue  # already done these
             m = self.re_HeroCards.finditer(hand.streets[street])
             for found in m:
@@ -825,4 +830,4 @@ class PartyPoker(HandHistoryConverter):
 def renderCards(string):
     "Splits strings like ' Js, 4d '"
     cards = string.strip().split(' ')
-    return filter(len, map(lambda x: x.strip(' ,'), cards))
+    return list(filter(len, [x.strip(' ,') for x in cards]))

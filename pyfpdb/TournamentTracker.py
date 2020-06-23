@@ -3,6 +3,7 @@
 """TourneyTracker.py
     Based on HUD_main .. who knows if we want to actually use this or not
 """
+from __future__ import print_function
 # Copyright (c) 2009-2011 Eric Blade, and the FPDB team.
 
 #This program is free software: you can redistribute it and/or modify
@@ -19,6 +20,9 @@
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 import L10n
 _ = L10n.get_translation()
 
@@ -36,12 +40,12 @@ import traceback
 (options, argv) = Options.fpdb_options()
 
 if not options.errorsToConsole:
-    print (_("Note: error output is being diverted to %s.") % "tourneyerror.txt"),
-             _("Any major error will be reported there _only_.")
+    print((_("Note: error output is being diverted to %s.") % "tourneyerror.txt"), end=' ')
+    print(_("Any major error will be reported there _only_."))
     errorFile = open('tourneyerror.txt', 'w', 0)
     sys.stderr = errorFile
 
-import thread
+import _thread
 import time
 import string
 import re
@@ -56,11 +60,11 @@ import Configuration
 import Database
 import SummaryEverleaf
 
-class Tournament:
+class Tournament(object):
     """Tournament will hold the information about a tournament, I guess ? Remember I'm new to this language, so I don't know the best ways to do things"""
 
     def __init__(self, parent, site, tid): # site should probably be something in the config object, but i don't know how the config object works right now, so we're going to make it a str ..
-        print "Tournament init"
+        print("Tournament init")
         self.parent = parent
         self.window = None
         self.site = site
@@ -135,7 +139,7 @@ class ttracker_main(object):
 
 #    a thread to read stdin
         gobject.threads_init()                       # this is required
-        thread.start_new_thread(self.read_stdin, ()) # starts the thread
+        _thread.start_new_thread(self.read_stdin, ()) # starts the thread
 
 #    a main window
         self.main_window = gtk.Window()
@@ -152,15 +156,15 @@ class ttracker_main(object):
         self.main_window.show_all()
 
     def addClicked(self, widget, data): # what is "data"? i'm guessing anything i pass in after the function name in connect() but unsure because the documentation sucks
-        print "addClicked", widget, data
+        print("addClicked", widget, data)
         t = Tournament(self, None, None)
         if t is not None:
-            print "new tournament=", t
+            print("new tournament=", t)
             self.tourney_list.append(t)
             mylabel = gtk.Label("%s - %s - %s - %s - %s %s - %s - %s - %s - %s - %s" % (t.site, t.id, t.starttime, t.endtime, t.structure, t.game, t.buyin, t.fee, t.numrebuys, t.numplayers, t.prizepool))
-            print "new label=", mylabel
+            print("new label=", mylabel)
             editbutton = gtk.Button(label=_("Edit"))
-            print "new button=", editbutton
+            print("new button=", editbutton)
             editbutton.connect("clicked", t.openwindow)
             rebuybutton = gtk.Button(label=_("Rebuy"))
             rebuybutton.connect("clicked", t.addrebuy)
@@ -176,7 +180,7 @@ class ttracker_main(object):
             t.editbutton = editbutton
             t.rebuybutton = rebuybutton
             self.vb.show()
-            print self.tourney_list
+            print(self.tourney_list)
 
             return True
         else:
@@ -259,7 +263,7 @@ class ttracker_main(object):
                 comm_cards = self.db_connection.get_common_cards(new_hand_id)
                 if comm_cards != {}: # stud!
                     cards['common'] = comm_cards['common']
-            except Exception, err:
+            except Exception as err:
                 err = traceback.extract_tb(sys.exc_info()[2])[-1]
                 #print _("db error: skipping ")+str(new_hand_id)+" "+err[2]+"("+str(err[1])+"): "+str(sys.exc_info()[1])
                 if new_hand_id: # new_hand_id is none if we had an error prior to the store

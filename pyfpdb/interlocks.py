@@ -3,6 +3,8 @@
 # Code from http://ender.snowburst.org:4747/~jjohns/interlocks.py
 # Thanks JJ!
 
+from __future__ import print_function
+from builtins import object
 import L10n
 _ = L10n.get_translation()
 
@@ -32,7 +34,7 @@ Differences in fpdb version to JJ's original:
 class SingleInstanceError(RuntimeError):
     "Thrown when you try to acquire an InterProcessLock and another version of the process is already running."
 
-class InterProcessLockBase:
+class InterProcessLockBase(object):
     def __init__(self, name=None ):
         self._has_lock = False
         if not name:
@@ -49,7 +51,7 @@ class InterProcessLockBase:
         if source == None:
             source="Unknown"
         if self._has_lock:             # make sure 2nd acquire in same process fails
-            print _("lock already held by:"),self.heldBy
+            print(_("lock already held by:"),self.heldBy)
             return False
         while not self._has_lock:
             try:

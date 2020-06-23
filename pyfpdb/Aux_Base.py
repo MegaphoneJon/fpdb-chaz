@@ -23,6 +23,8 @@ for clarity
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
 ########################################################################
+from builtins import range
+from builtins import object
 import L10n
 _ = L10n.get_translation()
 #    to do
@@ -80,7 +82,7 @@ class Aux_Window(object):
     def count_seats_with_cards(self, cards):
         """Returns the number of seats with shown cards in the list."""
         n = 0
-        for seat, cards_tuple in cards.items():
+        for seat, cards_tuple in list(cards.items()):
             if seat != 'common' and cards_tuple[0] != 0:
                 n += 1
         return n
@@ -92,7 +94,7 @@ class Aux_Window(object):
         #  Some sites (e.g. iPoker) miss out some seat numbers if max is <10,
         #  e.g. iPoker 6-max uses seats 1,3,5,6,8,10 NOT 1,2,3,4,5,6
         seat = self.hud.layout.hh_seats[seat]
-        for id, dict in self.hud.stat_dict.iteritems():
+        for id, dict in list(self.hud.stat_dict.items()):
             if seat == dict['seat']:
                 return id
         return None
@@ -162,14 +164,14 @@ class Aux_Seats(Aux_Window):
     def resize_windows(self): 
         #Resize calculation has already happened in HUD_main&hud.py
         # refresh our internal map to reflect these changes
-        for i in (range(1, self.hud.max + 1)):
+        for i in (list(range(1, self.hud.max + 1))):
             self.positions[i] = self.hud.layout.location[self.adj[i]]
         self.positions["common"] = self.hud.layout.common
         # and then move everything to the new places
         self.move_windows()
 
     def move_windows(self):
-        for i in (range(1, self.hud.max + 1)):
+        for i in (list(range(1, self.hud.max + 1))):
             self.m_windows[i].move(self.positions[i][0] + self.hud.table.x,
                             self.positions[i][1] + self.hud.table.y)
 
@@ -181,7 +183,7 @@ class Aux_Seats(Aux_Window):
         self.adj = self.adj_seats()
         self.m_windows = {}      # windows to put the card/hud items in
 
-        for i in (range(1, self.hud.max + 1) + ['common']):   
+        for i in (list(range(1, self.hud.max + 1)) + ['common']):   
             if i == 'common':
                 #    The common window is different from the others. Note that it needs to 
                 #    get realized, shown, topified, etc. in create_common
@@ -197,7 +199,7 @@ class Aux_Seats(Aux_Window):
                 self.m_windows[i].move(self.positions[i][0] + self.hud.table.x,
                                 self.positions[i][1] + self.hud.table.y)
                 self.hud.layout.location[self.adj[i]] = self.positions[i]
-                if self.params.has_key('opacity'):
+                if 'opacity' in self.params:
                     self.m_windows[i].setWindowOpacity(float(self.params['opacity']))
 
             # main action below - fill the created window with content
@@ -230,7 +232,7 @@ class Aux_Seats(Aux_Window):
         
     def update_gui(self, new_hand_id):
         """Update the gui, LDO."""
-        for i in self.m_windows.keys():
+        for i in list(self.m_windows.keys()):
             self.update_contents(self.m_windows[i], i)
         #reload latest block positions, in case another aux has changed them
         #these lines allow the propagation of block-moves across
@@ -241,7 +243,7 @@ class Aux_Seats(Aux_Window):
     def destroy(self):
         """Destroy all of the seat windows."""
         try:
-            for i in self.m_windows.keys():
+            for i in list(self.m_windows.keys()):
                 self.m_windows[i].destroy()
                 del(self.m_windows[i])
         except AttributeError:
@@ -250,7 +252,7 @@ class Aux_Seats(Aux_Window):
 #   Methods likely to be useful for mucked card windows (or similar) only
     def hide(self):
         """Hide the seat windows."""
-        for (i, w) in self.m_windows.iteritems():
+        for (i, w) in list(self.m_windows.items()):
             if w is not None: w.hide()
         self.displayed = False
 
@@ -287,7 +289,7 @@ class Aux_Seats(Aux_Window):
         # determine how to adjust seating arrangements, if a "preferred seat" is set in the hud layout configuration
         #  Need range here, not xrange -> need the actual list
     
-        adj = range(0, self.hud.max + 1) # default seat adjustments = no adjustment
+        adj = list(range(0, self.hud.max + 1)) # default seat adjustments = no adjustment
         
         #   does the user have a fav_seat? if so, just get out now
         if self.hud.site_parameters["fav_seat"][self.hud.max] == 0:
@@ -316,7 +318,7 @@ class Aux_Seats(Aux_Window):
             log.error(_("Error finding hero seat."))
             return adj
                 
-        for i in xrange(0, self.hud.max + 1):
+        for i in range(0, self.hud.max + 1):
             j = actual_seat + i
             if j > self.hud.max:
                 j = j - self.hud.max

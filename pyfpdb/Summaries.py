@@ -16,6 +16,7 @@
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
 """This file is to fetch summaries through IMAP and pass them on to the appropriate parser"""
+from __future__ import print_function
 #see http://docs.python.org/library/imaplib.html for the python interface
 #see http://tools.ietf.org/html/rfc2060#section-6.4.4 for IMAP4 search criteria
 
@@ -60,7 +61,7 @@ for messageData in neededMessages:
         tourneys.append(PokerStarsSummaries.PokerStarsSummaries(bodyData))
 
 for tourney in tourneys:
-    print "tourney:",tourney
+    print("tourney:",tourney)
 
 server.close()
 server.logout()

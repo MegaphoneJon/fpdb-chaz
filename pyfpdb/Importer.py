@@ -15,6 +15,14 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from __future__ import print_function
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from builtins import object
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -23,7 +31,7 @@ _ = L10n.get_translation()
 import os  # todo: remove this once import_dir is in fpdb_import
 from time import time, sleep, clock
 import datetime
-import Queue
+import queue
 import shutil
 import re
 
@@ -48,7 +56,7 @@ if __name__ == "__main__":
 # logging has been set up in fpdb.py or HUD_main.py, use their settings:
 log = logging.getLogger("importer")
 
-class Importer:
+class Importer(object):
     def __init__(self, caller, settings, config, sql = None, parent = None):
         """Constructor"""
         self.settings   = settings
@@ -90,7 +98,7 @@ class Importer:
         self.database = Database.Database(self.config, sql = self.sql)
         self.writerdbs = []
         self.settings.setdefault("threads", 1) # value set by GuiBulkImport
-        for i in xrange(self.settings['threads']):
+        for i in range(self.settings['threads']):
             self.writerdbs.append( Database.Database(self.config, sql = self.sql) )
 
         clock() # init clock in windows
@@ -117,7 +125,7 @@ class Importer:
     def setThreads(self, value):
         self.settings['threads'] = value
         if self.settings["threads"] > len(self.writerdbs):
-            for i in xrange(self.settings['threads'] - len(self.writerdbs)):
+            for i in range(self.settings['threads'] - len(self.writerdbs)):
                 self.writerdbs.append( Database.Database(self.config, sql = self.sql) )
 
     def setDropIndexes(self, value):
@@ -161,7 +169,7 @@ class Importer:
         """FPDBFile"""
         file = os.path.splitext(os.path.basename(fpdbfile.path))[0]
         try: #TODO: this is a dirty hack. GBI needs it, GAI fails with it.
-            file = unicode(file, "utf8", "replace")
+            file = str(file, "utf8", "replace")
         except TypeError:
             pass
         fpdbfile.fileId = self.database.get_id(file)
@@ -206,7 +214,7 @@ class Importer:
         if self.config.posix:
             pass
         else:
-            inputPath = unicode(inputPath)
+            inputPath = str(inputPath)
 
         # TODO: only add sane files?
         if os.path.isdir(inputPath):
@@ -328,7 +336,7 @@ class Importer:
         if fpdbfile.ftype == "both" and fpdbfile.path not in self.updatedsize:
             self._import_summary_file(fpdbfile)
         #    pass
-        print "DEBUG: _import_summary_file.ttime: %.3f %s" % (ttime, fpdbfile.ftype)
+        print("DEBUG: _import_summary_file.ttime: %.3f %s" % (ttime, fpdbfile.ftype))
         return (stored, duplicates, partial, skipped, errors, ttime)
 
 
@@ -361,7 +369,7 @@ class Importer:
         # if hands_in_db is zero or very low, we want to drop indexes, otherwise compare
         # import size with db size somehow:
         ret = "don't drop"
-        if self.settings['handsInDB'] < scale * (total_size/size_per_hand) + increment:
+        if self.settings['handsInDB'] < scale * (old_div(total_size,size_per_hand)) + increment:
             ret = "drop"
         #print "auto2: handsindb =", self.settings['handsInDB'], "total_size =", total_size, "size_per_hand =", \
         #      size_per_hand, "inc =", increment, "return:", ret
@@ -521,9 +529,9 @@ class Importer:
                 if self.callHud:
                     for hid in to_hud:
                         try:
-                            print _("fpdb_import: sending hand to hud"), hid, "pipe =", self.caller.pipe_to_hud
+                            print(_("fpdb_import: sending hand to hud"), hid, "pipe =", self.caller.pipe_to_hud)
                             self.caller.pipe_to_hud.stdin.write("%s" % (hid) + os.linesep)
-                        except IOError, e:
+                        except IOError as e:
                             log.error(_("Failed to send hand to HUD: %s") % e)
                 # Really ugly hack to allow testing Hands within the HHC from someone
                 # with only an Importer objec
@@ -542,7 +550,7 @@ class Importer:
         return (stored, duplicates, partial, skipped, errors, ttime)
     
     def autoSummaryGrab(self, force = False):
-        for f, fpdbfile in self.filelist.items():
+        for f, fpdbfile in list(self.filelist.items()):
             stat_info = os.stat(f)
             if ((time() - stat_info.st_mtime)> 300 or force) and fpdbfile.ftype == "both":
                 self._import_summary_file(fpdbfile)
@@ -565,13 +573,13 @@ class Importer:
                     conv = obj(db=self.database, config=self.config, siteName=fpdbfile.site.name, summaryText=summaryText, in_path = fpdbfile.path, header=summaryTexts[0])
                     self.database.resetBulkCache(False)
                     conv.insertOrUpdate(printtest = self.settings['testData'])
-                except FpdbHandPartial, e:
+                except FpdbHandPartial as e:
                     partial += 1
-                except FpdbParseError, e:
+                except FpdbParseError as e:
                     log.error(_("Summary import parse error in file: %s") % fpdbfile.path)
                     errors += 1
                 if j != 1:
-                    print _("Finished importing %s/%s tournament summaries") %(j, len(summaryTexts))
+                    print(_("Finished importing %s/%s tournament summaries") %(j, len(summaryTexts)))
                 stored = j
             ####Lock Placeholder####
         ttime = time() - ttime

@@ -15,6 +15,7 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from __future__ import print_function
 import L10n
 _ = L10n.get_translation()
 
@@ -122,7 +123,7 @@ def site_alias(alias):
               }
     try:
         tmp = aliases[alias]
-    except KeyError, e:
+    except KeyError as e:
         tmp = False
         print (_("Alias '%s' unknown") % alias)
 
@@ -130,9 +131,9 @@ def site_alias(alias):
 
 if __name__== "__main__":
     (options, argv) = fpdb_options()
-    print "errorsToConsole =", options.errorsToConsole
-    print "database name   =", options.dbname
-    print "config file     =", options.config
+    print("errorsToConsole =", options.errorsToConsole)
+    print("database name   =", options.dbname)
+    print("config file     =", options.config)
 
-    print _("press enter to end")
+    print(_("press enter to end"))
     sys.stdin.readline()

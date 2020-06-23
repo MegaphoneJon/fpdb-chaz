@@ -18,6 +18,10 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import division
+from builtins import map
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -345,7 +349,7 @@ class PokerStars(HandHistoryConverter):
                     log.error(_("PokerStarsToFpdb.determineGameType: Lim_Blinds has no lookup for '%s' - '%s'") % (mg['BB'], tmp))
                     raise FpdbParseError
             else:
-                info['sb'] = str((Decimal(mg['SB'])/2).quantize(Decimal("0.01")))
+                info['sb'] = str((old_div(Decimal(mg['SB']),2)).quantize(Decimal("0.01")))
                 info['bb'] = str(Decimal(mg['SB']).quantize(Decimal("0.01")))    
 
         return info
@@ -618,7 +622,7 @@ class PokerStars(HandHistoryConverter):
 #    streets PREFLOP, PREDRAW, and THIRD are special cases beacause
 #    we need to grab hero's cards
         for street in ('PREFLOP', 'DEAL'):
-            if street in hand.streets.keys():
+            if street in list(hand.streets.keys()):
                 m = self.re_HeroCards.finditer(hand.streets[street])
                 for found in m:
 #                    if m == None:
@@ -629,7 +633,7 @@ class PokerStars(HandHistoryConverter):
                         newcards = found.group('NEWCARDS').split(' ')
                         hand.addHoleCards(street, hand.hero, closed=newcards, shown=False, mucked=False, dealt=True)
 
-        for street, text in hand.streets.iteritems():
+        for street, text in list(hand.streets.items()):
             if not text or street in ('PREFLOP', 'DEAL'): continue  # already done these
             m = self.re_HeroCards.finditer(hand.streets[street])
             for found in m:
@@ -707,13 +711,13 @@ class PokerStars(HandHistoryConverter):
             if m: winner = m.group('PNAME')
             
             if hand.koBounty > 0:
-                for pname, amount in koAmounts.iteritems():
+                for pname, amount in list(koAmounts.items()):
                     if pname == winner:
                         end = (amount + hand.endBounty[pname])
-                        hand.koCounts[pname] = (amount + hand.endBounty[pname]) / Decimal(hand.koBounty)
+                        hand.koCounts[pname] = old_div((amount + hand.endBounty[pname]), Decimal(hand.koBounty))
                     else:
                         end = 0
-                        hand.koCounts[pname] = amount / Decimal(hand.koBounty)
+                        hand.koCounts[pname] = old_div(amount, Decimal(hand.koBounty))
         else:
             for a in self.re_Bounty.finditer(hand.handText):
                 if a.group('SPLIT') == 'split':
@@ -721,7 +725,7 @@ class PokerStars(HandHistoryConverter):
                     for pname in pnames:
                         if pname not in hand.koCounts:
                             hand.koCounts[pname] = 0
-                        hand.koCounts[pname] += (1 / Decimal(len(pnames)))
+                        hand.koCounts[pname] += (old_div(1, Decimal(len(pnames))))
                 else:
                     if a.group('PNAME') not in hand.koCounts:
                         hand.koCounts[a.group('PNAME')] = 0

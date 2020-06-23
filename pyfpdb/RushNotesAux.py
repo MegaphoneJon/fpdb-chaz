@@ -34,6 +34,7 @@ The existing notes file will be altered by this function
 #debugmode will write logfiles for the __init__ and update_data methods
 # writes into ./pyfpdb/~Rushdebug.*
 #
+from builtins import str
 debugmode = False
 
 #    Standard Library modules
@@ -70,7 +71,7 @@ def writexml(self, writer, indent="", addindent="", newl=""):
     writer.write(indent+"<" + self.tagName)
 
     attrs = self._get_attributes()
-    a_names = attrs.keys()
+    a_names = list(attrs.keys())
     a_names.sort()
 
     for a_name in a_names:
@@ -182,7 +183,7 @@ class RushNotes(Aux_Window):
             debugfile.write("hero="+str(self.heroid)+"\n")
             #debugfile.write(str(self.hud.stat_dict)+"\n")
             debugfile.write("table="+self.hud.table.name+"\n")
-            debugfile.write("players="+str(self.hud.stat_dict.keys())+"\n")
+            debugfile.write("players="+str(list(self.hud.stat_dict.keys()))+"\n")
             debugfile.write("db="+str(db_connection)+"\n")
 
         if self.hud.table.name not in self.rushtables:
@@ -190,7 +191,7 @@ class RushNotes(Aux_Window):
         #
         # Grab a list of player id's
         #
-        handplayers = self.hud.stat_dict.keys()  
+        handplayers = list(self.hud.stat_dict.keys())  
 
         #
         # build a dictionary of stats text for each player in the hand (excluding the hero)
@@ -201,7 +202,7 @@ class RushNotes(Aux_Window):
             # ignore hero, no notes available for hero at Full Tilt
             if playerid == self.heroid: continue
 
-            playername=unicode(str(Stats.do_stat(self.hud.stat_dict, player = playerid, stat = 'playername')[1]))
+            playername=str(str(Stats.do_stat(self.hud.stat_dict, player = playerid, stat = 'playername')[1]))
             # Use index[3] which is a short description
             n=str(Stats.do_stat(self.hud.stat_dict, player = playerid, stat = 'n')[3] + " ")
             vpip=str(Stats.do_stat(self.hud.stat_dict, player = playerid, stat = 'vpip')[3] + " ")

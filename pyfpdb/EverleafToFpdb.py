@@ -18,6 +18,9 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import division
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -160,7 +163,7 @@ or None if we fail to get the info """
                     raise FpdbParseError
             else:
                 sb = self.clearMoneyString(mg['SB'].replace(',', ''))
-                info['sb'] = str((Decimal(sb)/2).quantize(Decimal("0.01")))
+                info['sb'] = str((old_div(Decimal(sb),2)).quantize(Decimal("0.01")))
                 info['bb'] = str(Decimal(sb).quantize(Decimal("0.01")))
         return info
 

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """Returns a dict of SQL statements used in fpdb.
 """
+from __future__ import print_function
 #    Copyright 2008-2011, Ray E. Barker
 #   
 #    This program is free software; you can redistribute it and/or modify
@@ -26,13 +27,14 @@
 ########################################################################
 
 #    Standard Library modules
+from builtins import object
 import re
 
 #    pyGTK modules
 
 #    FreePokerTools modules
 
-class Sql:
+class Sql(object):
    
     def __init__(self, game='holdem', db_server='mysql'):
         self.query = {}
@@ -9377,12 +9379,12 @@ class Sql:
 
         # If using sqlite, use the ? placeholder instead of %s
         if db_server == 'sqlite':
-            for k, q in self.query.iteritems():
+            for k, q in list(self.query.items()):
                 self.query[k] = re.sub('%s', '?', q)
 
 if __name__ == "__main__":
 #    just print the default queries and exit
     s = Sql()
     for key in s.query:
-        print "For query " + key + ", sql ="
-        print s.query[key]
+        print("For query " + key + ", sql =")
+        print(s.query[key])

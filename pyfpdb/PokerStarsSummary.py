@@ -16,7 +16,10 @@
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
 """pokerstars-specific summary parsing code"""
+from __future__ import division
 
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -219,7 +222,7 @@ class PokerStarsSummary(TourneySummary):
             raise FpdbParseError
         info.update(m.groupdict())
         mg = {}
-        for k, j in info.iteritems():
+        for k, j in list(info.items()):
             if self.re_XLSTourneyInfo.get(k)!=None:
                 m1 = self.re_XLSTourneyInfo[k].search(j)
                 if m1: mg.update(m1.groupdict())
@@ -276,9 +279,9 @@ class PokerStarsSummary(TourneySummary):
             self.isAddOn   = True            
             rebuyAddOnAmt = int(100*Decimal(self.clearMoneyString(info['REBUYADDON'].replace(" ", ""))))
             if self.buyin != 0:
-                rebuys = int(rebuyAddOnAmt / self.buyin)
+                rebuys = int(old_div(rebuyAddOnAmt, self.buyin))
                 if rebuys != 0:
-                    self.fee = self.fee / (rebuys + 1)
+                    self.fee = old_div(self.fee, (rebuys + 1))
             self.rebuyCost = self.buyin + self.fee
             self.addOnCost = self.buyin + self.fee
         if ('REBUYADDON1' in info and info['REBUYADDON1'] != None):
@@ -349,7 +352,7 @@ class PokerStarsSummary(TourneySummary):
                 
             if (('REBUYADDON' in info and Decimal(self.clearMoneyString(info['REBUYADDON'].replace(" ", "")))>0)):
                 rebuyAddOnAmt = int(100*Decimal(self.clearMoneyString(info['REBUYADDON'].replace(" ", ""))))
-                rebuyCount = rebuyAddOnAmt/self.buyin
+                rebuyCount = old_div(rebuyAddOnAmt,self.buyin)
                 
             # KOs should be exclusively handled in the PokerStars hand history files
             if 'KOS' in info and info['KOS'] != None and info['KOS'] != '0.00':

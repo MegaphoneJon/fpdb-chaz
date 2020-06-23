@@ -18,6 +18,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import print_function
 import os
 import copy
 
@@ -27,7 +28,7 @@ import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
 def print_site(name, data, mask):
-    print "! %s" % name
+    print("! %s" % name)
     for game, limits in gametypes:
         tmp = ""
         for lim in limits:
@@ -35,8 +36,8 @@ def print_site(name, data, mask):
             if mask[name][game][lim] == False: style = "lightgrey"
             if data[name][game][lim] == True: style = "lightgreen"
             tmp += "| style='background:%s' | %s |" %(style, lim.upper())
-        print tmp[:-1]
-    print "|-"
+        print(tmp[:-1])
+    print("|-")
 
 
 #########################################################################
@@ -178,7 +179,7 @@ ring = copy.deepcopy(sites)
 tour = copy.deepcopy(sites)
 summ = copy.deepcopy(sites)
 
-for idx, f in idsite.filelist.iteritems():
+for idx, f in list(idsite.filelist.items()):
     if f.gametype != False:
         a = f.gametype['category']
         b = f.gametype['limitType']
@@ -187,10 +188,10 @@ for idx, f in idsite.filelist.iteritems():
             ring[c][a][b] = True
         if f.gametype['type'] == 'tour':
             if f.site.name == "Full Tilt Poker":
-                print "DEBUG: Found FTP: %s" % f.path
+                print("DEBUG: Found FTP: %s" % f.path)
             tour[c][a][b] = True
     else:
-        print "Skipping: %s" % f.path
+        print("Skipping: %s" % f.path)
 
 
 gametypes = [ ('holdem',    ['nl','pl','fl']),
@@ -232,10 +233,10 @@ col_colours = (hdcol1,hdcol2,hdcol1,hdcol2,hdcol1,hdcol2,hdcol1,hdcol2,hdcol1,hd
 
 ###################### Cash Game Wiki Table ##############################
 
-print """{| border=0<br>
+print("""{| border=0<br>
 |-
 | Site || colspan=3 style='background:%s' | Holdem || colspan=3 style='background:%s' | Omaha || colspan=3 style='background:%s' | O8 || colspan=2 style='background:%s' | 5CS ||           style='background:%s' | 7CS ||           style='background:%s' | 7CS H/L ||           style='background:%s' | Razz || colspan=3 style='background:%s' | 5CD ||           style='background:%s' | 27SD || colspan=2 style='background:%s' | 27TD || colspan=2 style='background:%s' | A5TD || colspan=2 style='background:%s' | Badugi
-|-""" % col_colours
+|-""" % col_colours)
 
 
 print_site("PokerStars", ring, sitemasks)
@@ -256,17 +257,17 @@ print_site("Betfair", ring, sitemasks)
 print_site("PKR", ring, sitemasks)
 print_site("PacificPoker", ring, sitemasks)
 
-print "|}"
+print("|}")
 
-print "###################### Tourney Wiki Table ##############################"
+print("###################### Tourney Wiki Table ##############################")
 
 # Site specific changes for tourneys
 # Stars: Preference for NLO8 to PLO8 in tourneys
 sitemasks['PokerStars']['omahahilo'] = {   'nl': None,  'pl': None, 'fl': None}
-print """{| border=0<br>
+print("""{| border=0<br>
 |-
 | Site || colspan=3 style='background:%s' | Holdem || colspan=3 style='background:%s' | Omaha || colspan=3 style='background:%s' | O8 || colspan=2 style='background:%s' | 5CS ||           style='background:%s' | 7CS ||           style='background:%s' | 7CS H/L ||           style='background:%s' | Razz || colspan=3 style='background:%s' | 5CD ||           style='background:%s' | 27SD || colspan=2 style='background:%s' | 27TD || colspan=2 style='background:%s' | A5TD || colspan=2 style='background:%s' | Badugi 
-|-""" % col_colours
+|-""" % col_colours)
 
 print_site("PokerStars", tour, sitemasks)
 print_site("Full Tilt Poker", tour, sitemasks)
@@ -286,5 +287,5 @@ print_site("Betfair", tour, sitemasks)
 print_site("PKR", tour, sitemasks)
 print_site("PacificPoker", tour, sitemasks)
 
-print "|}"
+print("|}")
 

@@ -15,6 +15,7 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
+from builtins import str
 import L10n
 _ = L10n.get_translation()
 
@@ -140,7 +141,7 @@ class MergeSummary(TourneySummary):
                 handsDict[tourNo] = [handText]
             else:
                 hands.append(handText)
-        for tourNo, hands in handsDict.iteritems():
+        for tourNo, hands in list(handsDict.items()):
             self.resetInfo()
             self.db.resetBulkCache()
             m = self.re_GameTypeHH.search(hands[0])
@@ -229,8 +230,8 @@ class MergeSummary(TourneySummary):
                         
                     if self.isDoubleOrNothing:
                         if handText==hands[-1]:
-                            won = [w for w in players.keys() if w not in out or w in won]
-                            out = [p for p in players.keys()]
+                            won = [w for w in list(players.keys()) if w not in out or w in won]
+                            out = [p for p in list(players.keys())]
                     i = 0
                     for n in out:
                         winnings = 0

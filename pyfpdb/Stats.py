@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """Manage collecting and formatting of stats and tooltips."""
+from __future__ import print_function
+from __future__ import division
 #    Copyright 2008-2011, Ray E. Barker
 
 #    
@@ -50,6 +52,8 @@
 #           attribute
 
 
+from builtins import str
+from past.utils import old_div
 import L10n
 _ = L10n.get_translation()
 
@@ -141,8 +145,8 @@ def do_stat(stat_dict, player = 24, stat = 'vpip', hand_instance = None):
 def totalprofit(stat_dict, player):
     
     try:
-        stat = float(stat_dict[player]['net']) / 100
-        return (stat/100.0, '$%.2f' % stat, 'tp=$%.2f' % stat, 'tot_prof=$%.2f' % stat, str(stat), _('Total Profit'))
+        stat = old_div(float(stat_dict[player]['net']), 100)
+        return (old_div(stat,100.0), '$%.2f' % stat, 'tp=$%.2f' % stat, 'tot_prof=$%.2f' % stat, str(stat), _('Total Profit'))
     except:
         return ('0', '$0.00', 'tp=0', 'totalprofit=0', '0', _('Total Profit'))
 
@@ -204,7 +208,7 @@ def m_ratio(stat_dict, player):
     hand_instance=_global_hand_instance
     
     if not hand_instance:
-        return      ((stat/100.0),
+        return      ((old_div(stat,100.0)),
                 '%d'        % (int(stat)),
                 'M=%d'      % (int(stat)),
                 'M=%d'      % (int(stat)),
@@ -220,7 +224,7 @@ def m_ratio(stat_dict, player):
     stack = _calculate_end_stack(stat_dict, player, hand_instance)
 
     if compulsory_bets != 0:
-        stat = stack / compulsory_bets
+        stat = old_div(stack, compulsory_bets)
     else:
         stat = 0
 
@@ -252,11 +256,11 @@ def bbstack(stat_dict, player):
     stack = _calculate_end_stack(stat_dict, player, hand_instance)
 
     if current_bigblindlimit != 0:
-        stat = stack / current_bigblindlimit
+        stat = old_div(stack, current_bigblindlimit)
     else:
         stat = 0
 
-    return      ((stat/100.0),
+    return      ((old_div(stat,100.0)),
                 '%d'        % (int(stat)),
                 "bb's=%d"      % (int(stat)),
                 "#bb's=%d"      % (int(stat)),
@@ -283,7 +287,7 @@ def playershort(stat_dict, player):
 def vpip(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['vpip'])/float(stat_dict[player]['vpip_opp'])
+        stat = old_div(float(stat_dict[player]['vpip']),float(stat_dict[player]['vpip_opp']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'v=%3.1f%%'     % (100.0*stat),
@@ -302,7 +306,7 @@ def vpip(stat_dict, player):
 def pfr(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['pfr'])/float(stat_dict[player]['pfr_opp'])
+        stat = old_div(float(stat_dict[player]['pfr']),float(stat_dict[player]['pfr_opp']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'p=%3.1f%%'     % (100.0*stat),
@@ -322,7 +326,7 @@ def pfr(stat_dict, player):
 def wtsd(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['sd'])/float(stat_dict[player]['saw_f'])
+        stat = old_div(float(stat_dict[player]['sd']),float(stat_dict[player]['saw_f']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'w=%3.1f%%'     % (100.0*stat),
@@ -342,7 +346,7 @@ def wtsd(stat_dict, player):
 def wmsd(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['wmsd'])/float(stat_dict[player]['sd'])
+        stat = old_div(float(stat_dict[player]['wmsd']),float(stat_dict[player]['sd']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'w=%3.1f%%'     % (100.0*stat),
@@ -364,8 +368,8 @@ def wmsd(stat_dict, player):
 def profit100(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['net'])/float(stat_dict[player]['n'])
-        return (stat/100.0,
+        stat = old_div(float(stat_dict[player]['net']),float(stat_dict[player]['n']))
+        return (old_div(stat,100.0),
                 '%.2f'          % (stat),
                 'p=%.2f'        % (stat),
                 'p/100=%.2f'    % (stat),
@@ -387,7 +391,7 @@ def bbper100(stat_dict, player):
     #['bigblind'] is already containing number of hands * table's bigblind (e.g. 401 hands @ 5c BB = 2005)
     try:
         stat = 100.0 * float(stat_dict[player]['net']) / float(stat_dict[player]['bigblind'])
-        return (stat/100.0,
+        return (old_div(stat,100.0),
                 '%5.3f'         % (stat),
                 'bb100=%5.3f'   % (stat),
                 'bb100=%5.3f'   % (stat),
@@ -409,7 +413,7 @@ def BBper100(stat_dict, player):
     #['bigblind'] is already containing number of hands * table's bigblind (e.g. 401 hands @ 5c BB = 2005)
     try:
         stat = 50 * float(stat_dict[player]['net']) / float(stat_dict[player]['bigblind'])
-        return (stat/100.0,
+        return (old_div(stat,100.0),
                 '%5.3f'         % (stat),
                 'BB100=%5.3f'   % (stat),
                 'BB100=%5.3f'   % (stat),
@@ -430,7 +434,7 @@ def saw_f(stat_dict, player):
     try:
         num = float(stat_dict[player]['saw_f'])
         den = float(stat_dict[player]['n'])
-        stat = num/den
+        stat = old_div(num,den)
         return (stat,
             '%3.1f'         % (100.0*stat),
             'sf=%3.1f%%'    % (100.0*stat),
@@ -454,9 +458,9 @@ def n(stat_dict, player):
         _n = stat_dict[player]['n']
         fmt = '%d' % _n
         if _n >= 10000:
-            k = _n / 1000
+            k = old_div(_n, 1000)
             c = _n % 1000
-            _c = float(c) / 100.0
+            _c = old_div(float(c), 100.0)
             d = int(round(_c))
             if d == 10:
                 k += 1
@@ -482,7 +486,7 @@ def n(stat_dict, player):
 def steal(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['steal'])/float(stat_dict[player]['steal_opp'])
+        stat = old_div(float(stat_dict[player]['steal']),float(stat_dict[player]['steal_opp']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'st=%3.1f%%'    % (100.0*stat),
@@ -496,7 +500,7 @@ def steal(stat_dict, player):
 def s_steal(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['suc_st'])/float(stat_dict[player]['steal'])
+        stat = old_div(float(stat_dict[player]['suc_st']),float(stat_dict[player]['steal']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 's_st=%3.1f%%'    % (100.0*stat),
@@ -510,7 +514,7 @@ def s_steal(stat_dict, player):
 def f_SB_steal(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['sbnotdef'])/float(stat_dict[player]['sbstolen'])
+        stat = old_div(float(stat_dict[player]['sbnotdef']),float(stat_dict[player]['sbstolen']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'fSB=%3.1f%%'   % (100.0*stat),
@@ -528,7 +532,7 @@ def f_SB_steal(stat_dict, player):
 def f_BB_steal(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['bbnotdef'])/float(stat_dict[player]['bbstolen'])
+        stat = old_div(float(stat_dict[player]['bbnotdef']),float(stat_dict[player]['bbstolen']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'fBB=%3.1f%%'   % (100.0*stat),
@@ -549,7 +553,7 @@ def f_steal(stat_dict, player):
         folded_blind = stat_dict[player]['sbnotdef'] + stat_dict[player]['bbnotdef']
         blind_stolen = stat_dict[player]['sbstolen'] + stat_dict[player]['bbstolen']
         
-        stat = float(folded_blind)/float(blind_stolen)
+        stat = old_div(float(folded_blind),float(blind_stolen))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'fB=%3.1f%%'    % (100.0*stat),
@@ -567,7 +571,7 @@ def f_steal(stat_dict, player):
 def three_B(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['tb_0'])/float(stat_dict[player]['tb_opp_0'])
+        stat = old_div(float(stat_dict[player]['tb_0']),float(stat_dict[player]['tb_opp_0']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 '3B=%3.1f%%'    % (100.0*stat),
@@ -585,7 +589,7 @@ def three_B(stat_dict, player):
 def four_B(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['fb_0'])/float(stat_dict[player]['fb_opp_0'])
+        stat = old_div(float(stat_dict[player]['fb_0']),float(stat_dict[player]['fb_opp_0']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 '4B=%3.1f%%'    % (100.0*stat),
@@ -603,7 +607,7 @@ def four_B(stat_dict, player):
 def cfour_B(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['cfb_0'])/float(stat_dict[player]['cfb_opp_0'])
+        stat = old_div(float(stat_dict[player]['cfb_0']),float(stat_dict[player]['cfb_opp_0']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'C4B=%3.1f%%'    % (100.0*stat),
@@ -622,8 +626,8 @@ def cfour_B(stat_dict, player):
 def fbr(stat_dict, player):
     stat = 0.0
     try: 
-        stat = float(stat_dict[player]['fb_0'])/float(stat_dict[player]['fb_opp_0'])
-        stat *= float(stat_dict[player]['pfr'])/float(stat_dict[player]['n'])
+        stat = old_div(float(stat_dict[player]['fb_0']),float(stat_dict[player]['fb_opp_0']))
+        stat *= old_div(float(stat_dict[player]['pfr']),float(stat_dict[player]['n']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'fbr=%3.1f%%'    % (100.0*stat),
@@ -642,7 +646,7 @@ def fbr(stat_dict, player):
 def ctb(stat_dict, player):
     stat = 0.0
     try: 
-        stat = (float(stat_dict[player]['f3b_opp_0'])-float(stat_dict[player]['f3b_0'])-float(stat_dict[player]['fb_0']))/float(stat_dict[player]['f3b_opp_0'])
+        stat = old_div((float(stat_dict[player]['f3b_opp_0'])-float(stat_dict[player]['f3b_0'])-float(stat_dict[player]['fb_0'])),float(stat_dict[player]['f3b_opp_0']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'ctb=%3.1f%%'    % (100.0*stat),
@@ -777,7 +781,7 @@ def f_dbr3(stat_dict, player):
 def squeeze(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['sqz_0'])/float(stat_dict[player]['sqz_opp_0'])
+        stat = old_div(float(stat_dict[player]['sqz_0']),float(stat_dict[player]['sqz_opp_0']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'SQZ=%3.1f%%'    % (100.0*stat),
@@ -796,7 +800,7 @@ def squeeze(stat_dict, player):
 def raiseToSteal(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['rts'])/float(stat_dict[player]['rts_opp'])
+        stat = old_div(float(stat_dict[player]['rts']),float(stat_dict[player]['rts_opp']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'RST=%3.1f%%'    % (100.0*stat),
@@ -814,7 +818,7 @@ def raiseToSteal(stat_dict, player):
 def car0(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['car_0'])/float(stat_dict[player]['car_opp_0'])
+        stat = old_div(float(stat_dict[player]['car_0']),float(stat_dict[player]['car_opp_0']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'CAR0=%3.1f%%'    % (100.0*stat),
@@ -832,7 +836,7 @@ def car0(stat_dict, player):
 def f_3bet(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['f3b_0'])/float(stat_dict[player]['f3b_opp_0'])
+        stat = old_div(float(stat_dict[player]['f3b_0']),float(stat_dict[player]['f3b_opp_0']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'F3B=%3.1f%%'    % (100.0*stat),
@@ -850,7 +854,7 @@ def f_3bet(stat_dict, player):
 def f_4bet(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['f4b_0'])/float(stat_dict[player]['f4b_opp_0'])
+        stat = old_div(float(stat_dict[player]['f4b_0']),float(stat_dict[player]['f4b_opp_0']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'F4B=%3.1f%%'    % (100.0*stat),
@@ -868,7 +872,7 @@ def f_4bet(stat_dict, player):
 def WMsF(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['w_w_s_1'])/float(stat_dict[player]['saw_1'])
+        stat = old_div(float(stat_dict[player]['w_w_s_1']),float(stat_dict[player]['saw_1']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'wf=%3.1f%%'    % (100.0*stat),
@@ -886,7 +890,7 @@ def WMsF(stat_dict, player):
 def a_freq1(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['aggr_1'])/float(stat_dict[player]['saw_f'])
+        stat = old_div(float(stat_dict[player]['aggr_1']),float(stat_dict[player]['saw_f']))
         return (stat,
                 '%3.1f'             % (100.0*stat),
                 'a1=%3.1f%%'        % (100.0*stat),
@@ -904,7 +908,7 @@ def a_freq1(stat_dict, player):
 def a_freq2(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['aggr_2'])/float(stat_dict[player]['saw_2'])
+        stat = old_div(float(stat_dict[player]['aggr_2']),float(stat_dict[player]['saw_2']))
         return (stat,
                 '%3.1f'             % (100.0*stat),
                 'a2=%3.1f%%'        % (100.0*stat),
@@ -922,7 +926,7 @@ def a_freq2(stat_dict, player):
 def a_freq3(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['aggr_3'])/float(stat_dict[player]['saw_3'])
+        stat = old_div(float(stat_dict[player]['aggr_3']),float(stat_dict[player]['saw_3']))
         return (stat,
                 '%3.1f'             % (100.0*stat),
                 'a3=%3.1f%%'        % (100.0*stat),
@@ -940,7 +944,7 @@ def a_freq3(stat_dict, player):
 def a_freq4(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['aggr_4'])/float(stat_dict[player]['saw_4'])
+        stat = old_div(float(stat_dict[player]['aggr_4']),float(stat_dict[player]['saw_4']))
         return (stat,
                 '%3.1f'             % (100.0*stat),
                 'a4=%3.1f%%'        % (100.0*stat),
@@ -958,8 +962,8 @@ def a_freq4(stat_dict, player):
 def a_freq_123(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(  stat_dict[player]['aggr_1'] + stat_dict[player]['aggr_2'] + stat_dict[player]['aggr_3']
-                    ) / float(  stat_dict[player]['saw_1'] + stat_dict[player]['saw_2'] + stat_dict[player]['saw_3']);
+        stat = old_div(float(  stat_dict[player]['aggr_1'] + stat_dict[player]['aggr_2'] + stat_dict[player]['aggr_3']
+                    ), float(  stat_dict[player]['saw_1'] + stat_dict[player]['saw_2'] + stat_dict[player]['saw_3']));
         return (stat,
                 '%3.1f'                 % (100.0*stat),
                 'afq=%3.1f%%'           % (100.0*stat),
@@ -987,10 +991,10 @@ def agg_fact(stat_dict, player):
         post_call  =  stat_dict[player]['call_1'] + stat_dict[player]['call_2'] + stat_dict[player]['call_3'] + stat_dict[player]['call_4']
        
         if post_call > 0:
-            stat = float (bet_raise) / float(post_call)
+            stat = old_div(float (bet_raise), float(post_call))
         else:
             stat = float (bet_raise)
-        return (stat/100.0,
+        return (old_div(stat,100.0),
                 '%2.2f'        % (stat) ,
                 'afa=%2.2f'    % (stat) ,
                 'agg_fa=%2.2f' % (stat) ,
@@ -1011,9 +1015,9 @@ def agg_fact_pct(stat_dict, player):
         post_call  =  stat_dict[player]['call_1'] + stat_dict[player]['call_2'] + stat_dict[player]['call_3'] + stat_dict[player]['call_4']
 
         if float(post_call + bet_raise) > 0.0:
-            stat = float (bet_raise) / float(post_call + bet_raise)
+            stat = old_div(float (bet_raise), float(post_call + bet_raise))
                    
-        return (stat/100.0,
+        return (old_div(stat,100.0),
                 '%2.2f'        % (stat) ,
                 'afap=%2.2f'    % (stat) ,
                 'agg_fa_pct=%2.2f' % (stat) ,
@@ -1032,7 +1036,7 @@ def cbet(stat_dict, player):
     try:
         cbets = stat_dict[player]['cb_1']+stat_dict[player]['cb_2']+stat_dict[player]['cb_3']+stat_dict[player]['cb_4']
         oppt = stat_dict[player]['cb_opp_1']+stat_dict[player]['cb_opp_2']+stat_dict[player]['cb_opp_3']+stat_dict[player]['cb_opp_4']
-        stat = float(cbets)/float(oppt)
+        stat = old_div(float(cbets),float(oppt))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'cbet=%3.1f%%'  % (100.0*stat),
@@ -1050,7 +1054,7 @@ def cbet(stat_dict, player):
 def cb1(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['cb_1'])/float(stat_dict[player]['cb_opp_1'])
+        stat = old_div(float(stat_dict[player]['cb_1']),float(stat_dict[player]['cb_opp_1']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'cb1=%3.1f%%'   % (100.0*stat),
@@ -1068,7 +1072,7 @@ def cb1(stat_dict, player):
 def cb2(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['cb_2'])/float(stat_dict[player]['cb_opp_2'])
+        stat = old_div(float(stat_dict[player]['cb_2']),float(stat_dict[player]['cb_opp_2']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'cb2=%3.1f%%'   % (100.0*stat),
@@ -1086,7 +1090,7 @@ def cb2(stat_dict, player):
 def cb3(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['cb_3'])/float(stat_dict[player]['cb_opp_3'])
+        stat = old_div(float(stat_dict[player]['cb_3']),float(stat_dict[player]['cb_opp_3']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'cb3=%3.1f%%'   % (100.0*stat),
@@ -1104,7 +1108,7 @@ def cb3(stat_dict, player):
 def cb4(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['cb_4'])/float(stat_dict[player]['cb_opp_4'])
+        stat = old_div(float(stat_dict[player]['cb_4']),float(stat_dict[player]['cb_opp_4']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'cb4=%3.1f%%'   % (100.0*stat),
@@ -1122,7 +1126,7 @@ def cb4(stat_dict, player):
 def ffreq1(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['f_freq_1'])/float(stat_dict[player]['was_raised_1'])
+        stat = old_div(float(stat_dict[player]['f_freq_1']),float(stat_dict[player]['was_raised_1']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'ff1=%3.1f%%'   % (100.0*stat),
@@ -1140,7 +1144,7 @@ def ffreq1(stat_dict, player):
 def ffreq2(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['f_freq_2'])/float(stat_dict[player]['was_raised_2'])
+        stat = old_div(float(stat_dict[player]['f_freq_2']),float(stat_dict[player]['was_raised_2']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'ff2=%3.1f%%'   % (100.0*stat),
@@ -1158,7 +1162,7 @@ def ffreq2(stat_dict, player):
 def ffreq3(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['f_freq_3'])/float(stat_dict[player]['was_raised_3'])
+        stat = old_div(float(stat_dict[player]['f_freq_3']),float(stat_dict[player]['was_raised_3']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'ff3=%3.1f%%'   % (100.0*stat),
@@ -1176,7 +1180,7 @@ def ffreq3(stat_dict, player):
 def ffreq4(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['f_freq_4'])/float(stat_dict[player]['was_raised_4'])
+        stat = old_div(float(stat_dict[player]['f_freq_4']),float(stat_dict[player]['was_raised_4']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'ff4=%3.1f%%'   % (100.0*stat),
@@ -1194,7 +1198,7 @@ def ffreq4(stat_dict, player):
 def f_cb1(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['f_cb_1'])/float(stat_dict[player]['f_cb_opp_1'])
+        stat = old_div(float(stat_dict[player]['f_cb_1']),float(stat_dict[player]['f_cb_opp_1']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'f_cb1=%3.1f%%'   % (100.0*stat),
@@ -1212,7 +1216,7 @@ def f_cb1(stat_dict, player):
 def f_cb2(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['f_cb_2'])/float(stat_dict[player]['f_cb_opp_2'])
+        stat = old_div(float(stat_dict[player]['f_cb_2']),float(stat_dict[player]['f_cb_opp_2']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'f_cb2=%3.1f%%'   % (100.0*stat),
@@ -1230,7 +1234,7 @@ def f_cb2(stat_dict, player):
 def f_cb3(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['f_cb_3'])/float(stat_dict[player]['f_cb_opp_3'])
+        stat = old_div(float(stat_dict[player]['f_cb_3']),float(stat_dict[player]['f_cb_opp_3']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'f_cb3=%3.1f%%'   % (100.0*stat),
@@ -1248,7 +1252,7 @@ def f_cb3(stat_dict, player):
 def f_cb4(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['f_cb_4'])/float(stat_dict[player]['f_cb_opp_4'])
+        stat = old_div(float(stat_dict[player]['f_cb_4']),float(stat_dict[player]['f_cb_opp_4']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'f_cb4=%3.1f%%'   % (100.0*stat),
@@ -1266,7 +1270,7 @@ def f_cb4(stat_dict, player):
 def cr1(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['cr_1'])/float(stat_dict[player]['ccr_opp_1'])
+        stat = old_div(float(stat_dict[player]['cr_1']),float(stat_dict[player]['ccr_opp_1']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'cr1=%3.1f%%'   % (100.0*stat),
@@ -1284,7 +1288,7 @@ def cr1(stat_dict, player):
 def cr2(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['cr_2'])/float(stat_dict[player]['ccr_opp_2'])
+        stat = old_div(float(stat_dict[player]['cr_2']),float(stat_dict[player]['ccr_opp_2']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'cr2=%3.1f%%'   % (100.0*stat),
@@ -1302,7 +1306,7 @@ def cr2(stat_dict, player):
 def cr3(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['cr_3'])/float(stat_dict[player]['ccr_opp_3'])
+        stat = old_div(float(stat_dict[player]['cr_3']),float(stat_dict[player]['ccr_opp_3']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'cr3=%3.1f%%'   % (100.0*stat),
@@ -1320,7 +1324,7 @@ def cr3(stat_dict, player):
 def cr4(stat_dict, player):
     stat = 0.0
     try:
-        stat = float(stat_dict[player]['cr_4'])/float(stat_dict[player]['ccr_opp_4'])
+        stat = old_div(float(stat_dict[player]['cr_4']),float(stat_dict[player]['ccr_opp_4']))
         return (stat,
                 '%3.1f'         % (100.0*stat),
                 'cr4=%3.1f%%'   % (100.0*stat),
@@ -1458,22 +1462,22 @@ def starthands(stat_dict, player):
         if qposition == "b" and qstreet0CalledRaiseDone:
             PFdefendBB=PFdefendBB+"/"+humancards
             count_pfd += 1
-            if (count_pfd / 8.0 == int(count_pfd / 8.0)):
+            if (old_div(count_pfd, 8.0) == int(old_div(count_pfd, 8.0))):
                 PFdefendBB=PFdefendBB+"\n"
         elif qstreet0Aggr == True:
             PFaggr=PFaggr+"/"+humancards+"."+qposition
             count_pfa += 1
-            if (count_pfa / 8.0 == int(count_pfa / 8.0)):
+            if (old_div(count_pfa, 8.0) == int(old_div(count_pfa, 8.0))):
                 PFaggr=PFaggr+"\n"
         elif qstreet0CalledRaiseDone:
             PFcar=PFcar+"/"+humancards+"."+qposition
             count_pfc += 1
-            if (count_pfc / 8.0 == int(count_pfc / 8.0)):
+            if (old_div(count_pfc, 8.0) == int(old_div(count_pfc, 8.0))):
                 PFcar=PFcar+"\n"
         else:
             PFlimp=PFlimp+"/"+humancards+"."+qposition
             count_pfl += 1
-            if (count_pfl / 8.0 == int(count_pfl / 8.0)):
+            if (old_div(count_pfl, 8.0) == int(old_div(count_pfl, 8.0))):
                 PFlimp=PFlimp+"\n"
     sc.close()
     
@@ -1522,17 +1526,17 @@ if __name__== "__main__":
     stat_dict = db_connection.get_stats_from_hand(h, "ring")
     hand_instance = Hand.hand_factory(h, c, db_connection)
     
-    for player in stat_dict.keys():
+    for player in list(stat_dict.keys()):
         print (_("Example stats. Player = %s, Hand = %s:") % (player, h))
         for attr in STATLIST:
-            print attr, " : ", do_stat(stat_dict, player=player, stat=attr, hand_instance=hand_instance)
+            print(attr, " : ", do_stat(stat_dict, player=player, stat=attr, hand_instance=hand_instance))
         break
 
-    print
-    print _("Legal stats:")
-    print _("(add _0 to name to display with 0 decimal places, _1 to display with 1, etc)")
+    print()
+    print(_("Legal stats:"))
+    print(_("(add _0 to name to display with 0 decimal places, _1 to display with 1, etc)"))
     stat_descriptions = get_valid_stats()
     for stat in STATLIST:
-        print stat, " : ", stat_descriptions[stat]
+        print(stat, " : ", stat_descriptions[stat])
 
 

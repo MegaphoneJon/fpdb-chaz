@@ -16,6 +16,7 @@
 #In the "official" distribution you can find the license in agpl-3.0.txt.
 
 """A site template for tourney summary parsing"""
+from __future__ import print_function
 
 import L10n
 _ = L10n.get_translation()
@@ -85,7 +86,7 @@ class Sitename(TourneySummary):
             log.error("parseSummary: " + _("Raising FpdbParseError"))
             raise FpdbParseError(_("Unable to recognise Tourney Info: '%s'") % tmp)
 
-        print "DEBUG: m.groupdict(): %s" % m.groupdict()
+        print("DEBUG: m.groupdict(): %s" % m.groupdict())
 
         mg = m.groupdict()
         self.tourNo = ''

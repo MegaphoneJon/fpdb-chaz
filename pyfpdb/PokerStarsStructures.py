@@ -19,10 +19,12 @@
 
 ########################################################################
 
+from builtins import range
+from builtins import object
 from datetime import datetime
 import pytz
 
-class PokerStarsStructures:
+class PokerStarsStructures(object):
     
     def __init__(self):
         self.versions = [pytz.utc.localize(datetime.strptime(d, "%Y/%m/%d %H:%M:%S")) for d in ("2011/05/05 00:00:00","2011/05/20 00:00:00")]

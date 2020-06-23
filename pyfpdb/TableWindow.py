@@ -26,6 +26,7 @@ client has been resized, destroyed, etc.
 
 ########################################################################
 
+from builtins import object
 import L10n
 _ = L10n.get_translation()
 
@@ -154,11 +155,11 @@ class Table_Window(object):
         title = self.title
 
 #    check for nl and pl games first, to avoid bad matches
-        for game, names in nlpl_game_names.iteritems():
+        for game, names in list(nlpl_game_names.items()):
             for name in names:
                 if name in title:
                     return game
-        for game, names in limit_game_names.iteritems():
+        for game, names in list(limit_game_names.items()):
             for name in names:
                 if name in title:
                     return game

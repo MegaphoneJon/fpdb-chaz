@@ -18,6 +18,9 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ########################################################################
 
+from __future__ import print_function
+from builtins import range
+from builtins import object
 import sys
 import os
 import codecs
@@ -34,7 +37,7 @@ pp = pprint.PrettyPrinter(indent=4)
 
 DEBUG = False
 
-class FpdbError:
+class FpdbError(object):
     expected = {   # Site     : { path: (stored, dups, partial, errs) }
                    'Absolute Poker' : {},
                    'Betfair' : {},
@@ -82,10 +85,10 @@ class FpdbError:
         self.parse_errors = []
 
     def error_report(self, filename, hand, stat, ghash, testhash, player):
-        print "Regression Test Error:"
-        print "\tFile: %s" % filename
-        print "\tStat: %s" % stat
-        print "\tPlayer: %s" % player
+        print("Regression Test Error:")
+        print("\tFile: %s" % filename)
+        print("\tStat: %s" % stat)
+        print("\tPlayer: %s" % player)
         if filename in self.histogram:
             self.histogram[filename] += 1
         else:
@@ -102,24 +105,24 @@ class FpdbError:
         self.errorcount += 1
 
     def print_histogram(self):
-        print "%s:" % self.site
+        print("%s:" % self.site)
         for f in self.histogram:
             idx = f.find('regression')
-            print "(%3d) : %s" %(self.histogram[f], self.reduce_pathname(f))
+            print("(%3d) : %s" %(self.histogram[f], self.reduce_pathname(f)))
 
     def print_parse_list(self):
         VERBOSE = False
         if len(self.parse_errors) > 0:
-            print "%s:" % self.site
+            print("%s:" % self.site)
             for filename, import_numbers in self.parse_errors:
                 path = self.reduce_pathname(filename)
                 if path in self.expected[self.site]:
                     if self.expected[self.site][path] == import_numbers:
-                        if VERBOSE: print "(0): %s" %(path)
+                        if VERBOSE: print("(0): %s" %(path))
                     else:
-                        print "(X): %s" %(path)
+                        print("(X): %s" %(path))
                 else:
-                    print "(X): %s" %(path)
+                    print("(X): %s" %(path))
 
     def reduce_pathname(self, path):
         idx = path.find('regression')
@@ -200,7 +203,7 @@ def compare_handsplayers_file(filename, importer, errors):
                             pass
                         else:
                             errors.error_report(filename, hand, stat, ghash, testhash, p)
-                except KeyError, e:
+                except KeyError as e:
                     errors.error_report(filename, False, "KeyError: '%s'" % stat, False, False, p)
 
 def compare_hands_file(filename, importer, errors):
@@ -246,7 +249,7 @@ def compare_hands_file(filename, importer, errors):
                         pass
                     else:
                         errors.error_report(filename, hand, datum, ghash, testhash, None)
-            except KeyError, e:
+            except KeyError as e:
                 errors.error_report(filename, False, "KeyError: '%s'" % datum, False, False, None)
 
 
@@ -257,8 +260,8 @@ def compare(leaf, importer, errors, site):
     # Test if this is a hand history file
     if filename.endswith('.txt') or filename.endswith('.xml'):
         # test if there is a .hp version of the file
-        if DEBUG: print "Site: %s" % site
-        if DEBUG: print "Filename: %s" % filename
+        if DEBUG: print("Site: %s" % site)
+        if DEBUG: print("Filename: %s" % filename)
         file_added = importer.addBulkImportImportFileOrDir(filename, site=site)
         if not file_added:
             errors.error_report(filename, (0, 0, 0, 1), "Parse", False, False, False)
@@ -291,7 +294,8 @@ def walk_testfiles(dir, function, importer, errors, site):
                 walk_testfiles(nfile, compare, importer, errors, site)
             else:
                 function(nfile, importer, errors, site)
-    except OSError as (errno, strerror):
+    except OSError as xxx_todo_changeme:
+        (errno, strerror) = xxx_todo_changeme.args
         if errno == 20:
             # Error 20 is 'not a directory'
             function(dir, importer, errors, site)
@@ -299,13 +303,13 @@ def walk_testfiles(dir, function, importer, errors, site):
             raise OSError(errno, strerror)
 
 def usage():
-    print "USAGE:"
-    print "Run all tests:"
-    print "\t./TestHandsPlayers.py"
-    print "Run tests for a sinlge site:"
-    print "\t./TestHandsPlayers -s <Sitename>"
-    print "Run tests for a sinlge file in a site:"
-    print "\t./TestHandsPlayers -s <Sitename> -f <filename>"
+    print("USAGE:")
+    print("Run all tests:")
+    print("\t./TestHandsPlayers.py")
+    print("Run tests for a sinlge site:")
+    print("\t./TestHandsPlayers -s <Sitename>")
+    print("Run tests for a sinlge file in a site:")
+    print("\t./TestHandsPlayers -s <Sitename> -f <filename>")
     sys.exit(0)
 
 def main(argv=None):
@@ -327,10 +331,10 @@ def main(argv=None):
         if options.sitename == False:
             usage()
         if options.filename:
-            print "Testing single hand: '%s'" % options.filename
+            print("Testing single hand: '%s'" % options.filename)
             single_file_test = True
         else:
-            print "Only regression testing '%s' files" % (options.sitename)
+            print("Only regression testing '%s' files" % (options.sitename))
         test_all_sites = False
 
     config = Configuration.Config(file = "HUD_config.test.xml")
@@ -534,22 +538,22 @@ def main(argv=None):
             else:
                 statdict[stat] = tmp[stat]
 
-    print "\n"
-    print "---------------------"
-    print "Errors by stat:"
-    print "---------------------"
+    print("\n")
+    print("---------------------")
+    print("Errors by stat:")
+    print("---------------------")
     #for stat in statdict:
     #    print "(%3d) : %s" %(statdict[stat], stat)
 
-    sortedstats = sorted([(value,key) for (key,value) in statdict.items()])
+    sortedstats = sorted([(value,key) for (key,value) in list(statdict.items())])
     for num, stat in sortedstats:
-        print "(%3d) : %s" %(num, stat)
+        print("(%3d) : %s" %(num, stat))
 
-    print "---------------------"
-    print "Total Errors: %d" % totalerrors
-    print "---------------------"
+    print("---------------------")
+    print("Total Errors: %d" % totalerrors)
+    print("---------------------")
 
-    print "-------- Parse Error List --------"
+    print("-------- Parse Error List --------")
     for i, site in enumerate(ErrorsList):
         ErrorsList[i].print_parse_list()
 
