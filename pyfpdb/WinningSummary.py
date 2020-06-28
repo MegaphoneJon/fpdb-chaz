@@ -55,38 +55,38 @@ class WinningSummary(TourneySummary):
         'Regular': 'Normal'
     }
     
-    re_Identify = re.compile(ur'<link\sid="ctl00_CalendarTheme"')
+    re_Identify = re.compile(r'<link\sid="ctl00_CalendarTheme"')
     
-    re_HTMLPlayer = re.compile(ur"Player\sDetails:\s%(PLYR)s</a>" % substitutions, re.IGNORECASE)
+    re_HTMLPlayer = re.compile(r"Player\sDetails:\s%(PLYR)s</a>" % substitutions, re.IGNORECASE)
                         
     re_HTMLTourneyInfo = re.compile(
-        ur'<td>(?P<TOURNO>[0-9]+)</td>' \
-        ur'<td>(?P<GAME>Hold\'em|Omaha|Omaha\sHiLow|Seven\sCards\sStud|Seven\sCards\sStud\sHiLow)</td>' \
-        ur'<td>(?P<TOURNAME>.*)</td>' \
-        ur'<td>(?P<CURRENCY>[%(LS)s])(?P<BUYIN>[%(NUM)s]+)</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>[%(LS)s](?P<FEE>[%(NUM)s]+)</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>[%(LS)s](?P<REBUYS>[%(NUM)s]+)</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>[%(LS)s](?P<ADDONS>[%(NUM)s]+)</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>[%(LS)s](?P<WINNINGS>[%(NUM)s]+)</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>[%(NUM)s]+</td>' \
-        ur'<td>.*</td>' \
-        ur'<td>(?P<TOURNEYSTART>.*)</td>' \
-        ur'<td>(?P<TOURNEYEND>.*)</td>' \
-        ur'<td>.*</td>' # duration
+        r'<td>(?P<TOURNO>[0-9]+)</td>' \
+        r'<td>(?P<GAME>Hold\'em|Omaha|Omaha\sHiLow|Seven\sCards\sStud|Seven\sCards\sStud\sHiLow)</td>' \
+        r'<td>(?P<TOURNAME>.*)</td>' \
+        r'<td>(?P<CURRENCY>[%(LS)s])(?P<BUYIN>[%(NUM)s]+)</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>[%(LS)s](?P<FEE>[%(NUM)s]+)</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>[%(LS)s](?P<REBUYS>[%(NUM)s]+)</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>[%(LS)s](?P<ADDONS>[%(NUM)s]+)</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>[%(LS)s](?P<WINNINGS>[%(NUM)s]+)</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>[%(NUM)s]+</td>' \
+        r'<td>.*</td>' \
+        r'<td>(?P<TOURNEYSTART>.*)</td>' \
+        r'<td>(?P<TOURNEYEND>.*)</td>' \
+        r'<td>.*</td>' # duration
         % substitutions,  
         re.VERBOSE|re.IGNORECASE
     )

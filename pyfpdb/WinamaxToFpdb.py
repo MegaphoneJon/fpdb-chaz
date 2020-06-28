@@ -27,7 +27,7 @@ import L10n
 _ = L10n.get_translation()
 
 import sys
-import exceptions
+from builtins import AttributeError
 
 from HandHistoryConverter import *
 from decimal_wrapper import Decimal
@@ -416,7 +416,7 @@ class Winamax(HandHistoryConverter):
             try:
                 m = self.re_PostSB.search(hand.handText)
                 hand.addBlind(m.group('PNAME'), 'small blind', m.group('SB'))
-            except exceptions.AttributeError: # no small blind
+            except builtins.AttributeError: # no small blind
                 log.warning( _("No small blinds found.")+str(sys.exc_info()) )
             #hand.addBlind(None, None, None)
         for a in self.re_PostBB.finditer(hand.handText):

@@ -25,7 +25,7 @@ import L10n
 _ = L10n.get_translation()
 
 import sys
-import exceptions
+from builtins import AttributeError
 
 import Configuration
 from HandHistoryConverter import *
@@ -384,7 +384,7 @@ class OnGame(HandHistoryConverter):
         try:
             for a in self.re_PostSB.finditer(hand.handText):
                 hand.addBlind(a.group('PNAME'), 'small blind', self.clearMoneyString(a.group('SB')))
-        except exceptions.AttributeError: # no small blind
+        except builtins.AttributeError: # no small blind
             log.debug( _("No small blinds found.")+str(sys.exc_info()) )
             #hand.addBlind(None, None, None)
         for a in self.re_PostBB.finditer(hand.handText):

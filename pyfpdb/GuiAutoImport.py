@@ -334,7 +334,7 @@ if __name__== "__main__":
     settings.update(config.get_import_parameters())
     settings.update(config.get_default_paths())
     settings['global_lock'] = interlocks.InterProcessLock(name="fpdb_global_lock")
-    settings['cl_options'] = string.join(sys.argv[1:])
+    settings['cl_options'] = '.'.join(sys.argv[1:])
 
     if(options.gui == True):
         from PyQt5.QtWidgets import QApplication, QMainWindow

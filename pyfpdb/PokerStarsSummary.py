@@ -75,21 +75,20 @@ class PokerStarsSummary(TourneySummary):
                       'Omaha H/L Mixed' : ('mixed','plo_lo'),
                        'Hold\'em Mixed' : ('mixed','mholdem'),
                           'Mixed Omaha' : ('mixed','momaha'),
-                          'Triple Stud' : ('mixed','3stud'),
                }
 
     substitutions = {
                      'LEGAL_ISO' : "USD|EUR|GBP|CAD|FPP|SC|INR|CNY",    # legal ISO currency codes
-                            'LS' : u"\$|\xe2\x82\xac|\u20AC||\£|\u20b9|\¥|" # legal currency symbols - Euro(cp1252, utf-8)
+                            'LS' : r"\$|\xe2\x82\xac|\u20AC||\£|\u20b9|\¥|" # legal currency symbols - Euro(cp1252, utf-8)
                     }
     
-    re_Identify = re.compile(u'((PokerStars|Full\sTilt)\sTournament\s\#\d+|<title>TOURNEYS:)')
+    re_Identify = re.compile(r'((PokerStars|Full\sTilt)\sTournament\s\#\d+|<title>TOURNEYS:)')
     
-    re_TourNo = re.compile("\#(?P<TOURNO>[0-9]+),")    
-    re_Header = re.compile("History\sRequest\s\-\s")
-    re_emailHeader = re.compile("Delivered\-To\:\s")
+    re_TourNo = re.compile(r"\#(?P<TOURNO>[0-9]+),")    
+    re_Header = re.compile(r"History\sRequest\s\-\s")
+    re_emailHeader = re.compile(r"Delivered\-To\:\s")
 
-    re_TourneyInfo = re.compile(u"""
+    re_TourneyInfo = re.compile(r"""
                         \#(?P<TOURNO>[0-9]+),\s
                         ((?P<LIMIT>No\sLimit|NO\sLIMIT|Limit|LIMIT|Pot\sLimit|POT\sLIMIT|Pot\sLimit\sPre\-Flop,\sNo\sLimit\sPost\-Flop)\s)?
                         (?P<SPLIT>Split)?\s?
@@ -107,72 +106,72 @@ class PokerStarsSummary(TourneySummary):
                         """ % substitutions ,re.VERBOSE|re.MULTILINE)
     
     #You made 5 rebuys and 1 addons for a total of USD 3,180.00.
-    re_rebuyAddOn = re.compile("""
+    re_rebuyAddOn = re.compile(r"""
                         You\smade\s(?P<REBUYCOUNT>\d+)\srebuys\sand\s(?P<ADDONCOUNT>\d+)\saddons\sfor\sa\stotal\sof\s(%(LEGAL_ISO)s)\s(?P<REBUYADDON>[,.0-9]+)
                                """ % substitutions ,re.VERBOSE|re.MULTILINE)
     #You collected 5 bounties for a total of USD 875.00.
-    re_KOBounties = re.compile("""
+    re_KOBounties = re.compile(r"""
                         You\scollected\s(?P<KOCOUNT>\d+)\sbounties\sfor\sa\stotal\sof\s(%(LEGAL_ISO)s)\s(?P<KOBOUNTY>[,.0-9]+)
                                """ % substitutions ,re.VERBOSE|re.MULTILINE)
     
-    re_HTMLTourneyInfo = re.compile(ur'<td align="right">(?P<DATETIME>.*)</td>' \
-                        ur'<td align="center">(?P<TOURNO>[0-9]+)</td>' \
-                        ur'(<td>(?P<TOURNAME>.*)</td>)?' \
-                        ur'<td align="right">' \
-                            ur'(?P<LIMIT>[ a-zA-Z\-]+)\s' \
-                            ur'(?P<SPLIT>Split)?\s?' \
-                            ur'(?P<GAME>Hold\'em|Razz|RAZZ|7\sCard\sStud|7\sCard\sStud\sH/L|Omaha|Omaha\sH/L|Badugi|Triple\sDraw\s2\-7(\sLowball)?|Single\sDraw\s2\-7(\sLowball)?|5\sCard\sDraw|(5|6)\sCard\sOmaha(\sH/L)?|Courchevel(\sH/L)?|HORSE|Horse|8\-Game|HOSE|Hose|Omaha\sH/L\sMixed|Hold\'em\sMixed|PLH/PLO\sMixed|NLH/PLO\sMixed|Triple\sStud|NLH/NLO\sMixed|Mixed\sNLH/NLO|Mixed\sOmaha\sH/L|Mixed\sHold\'em|Mixed\sPLH/PLO|Mixed\sNLH/PLO)</td>' \
-                        ur'<td.*?>(?P<CURRENCY>(%(LEGAL_ISO)s)?)(&nbsp;)?</td>' \
-                        ur'<td.*?>(?P<BUYIN>([,.0-9 ]+|Freeroll))(?P<FPPBUYIN>(\s|&nbsp;)(FPP|SC|StarsCoin))?</td>' \
-                        ur'<td.*?>(?P<REBUYADDON>[,.0-9 ]+)</td>' \
-                        ur'<td.*?>(?P<FEE>[,.0-9 ]+)</td>' \
-                        ur'<td align="?right"?>(?P<RANK>[,.0-9]+)</td>' \
-                        ur'<td align="right">(?P<ENTRIES>[,.0-9]+)</td>' \
-                        ur'(<td.*?>[,.0-9]+</td>)?' \
-                        ur'<td.*?>(?P<WINNINGS>[,.0-9]+)(?P<FPPWINNINGS>\s\+\s[,.0-9]+(\s|&nbsp;)(FPP|SC|StarsCoin))?</td>' \
-                        ur'<td.*?>(?P<KOS>[,.0-9]+)</td>' \
-                        ur'<td.*?>((?P<TARGET>[,.0-9]+)|(&nbsp;))</td>' \
-                        ur'<td.*?>((?P<WONTICKET>\*\\\/\*)|(&nbsp;))</td>' 
+    re_HTMLTourneyInfo = re.compile(r'<td align="right">(?P<DATETIME>.*)</td>' \
+                        r'<td align="center">(?P<TOURNO>[0-9]+)</td>' \
+                        r'(<td>(?P<TOURNAME>.*)</td>)?' \
+                        r'<td align="right">' \
+                            r'(?P<LIMIT>[ a-zA-Z\-]+)\s' \
+                            r'(?P<SPLIT>Split)?\s?' \
+                            r'(?P<GAME>Hold\'em|Razz|RAZZ|7\sCard\sStud|7\sCard\sStud\sH/L|Omaha|Omaha\sH/L|Badugi|Triple\sDraw\s2\-7(\sLowball)?|Single\sDraw\s2\-7(\sLowball)?|5\sCard\sDraw|(5|6)\sCard\sOmaha(\sH/L)?|Courchevel(\sH/L)?|HORSE|Horse|8\-Game|HOSE|Hose|Omaha\sH/L\sMixed|Hold\'em\sMixed|PLH/PLO\sMixed|NLH/PLO\sMixed|Triple\sStud|NLH/NLO\sMixed|Mixed\sNLH/NLO|Mixed\sOmaha\sH/L|Mixed\sHold\'em|Mixed\sPLH/PLO|Mixed\sNLH/PLO)</td>' \
+                        r'<td.*?>(?P<CURRENCY>(%(LEGAL_ISO)s)?)(&nbsp;)?</td>' \
+                        r'<td.*?>(?P<BUYIN>([,.0-9 ]+|Freeroll))(?P<FPPBUYIN>(\s|&nbsp;)(FPP|SC|StarsCoin))?</td>' \
+                        r'<td.*?>(?P<REBUYADDON>[,.0-9 ]+)</td>' \
+                        r'<td.*?>(?P<FEE>[,.0-9 ]+)</td>' \
+                        r'<td align="?right"?>(?P<RANK>[,.0-9]+)</td>' \
+                        r'<td align="right">(?P<ENTRIES>[,.0-9]+)</td>' \
+                        r'(<td.*?>[,.0-9]+</td>)?' \
+                        r'<td.*?>(?P<WINNINGS>[,.0-9]+)(?P<FPPWINNINGS>\s\+\s[,.0-9]+(\s|&nbsp;)(FPP|SC|StarsCoin))?</td>' \
+                        r'<td.*?>(?P<KOS>[,.0-9]+)</td>' \
+                        r'<td.*?>((?P<TARGET>[,.0-9]+)|(&nbsp;))</td>' \
+                        r'<td.*?>((?P<WONTICKET>\*\\\/\*)|(&nbsp;))</td>' 
                         % substitutions, re.IGNORECASE)
     
     re_XLSTourneyInfo = {}
     re_XLSTourneyInfo['Date/Time'] = re.compile(r'(?P<DATETIME>.*)')
     re_XLSTourneyInfo['Tourney'] = re.compile(r'(?P<TOURNO>[0-9]+)')
-    re_XLSTourneyInfo['Name'] = re.compile(ur'(?P<TOURNAME>.*)')
-    re_XLSTourneyInfo['Game'] = re.compile(ur'(?P<LIMIT>[ a-zA-Z\-]+)\s' \
-                                           ur'(?P<SPLIT>Split)?\s?'
-                                           ur'(?P<GAME>Hold\'em|Razz|RAZZ|7\sCard\sStud|7\sCard\sStud\sH/L|Omaha|Omaha\sH/L|Badugi|Triple\sDraw\s2\-7(\sLowball)?|Single\sDraw\s2\-7(\sLowball)?|5\sCard\sDraw|(5|6)\sCard\sOmaha(\sH/L)?|Courchevel(\sH/L)?|HORSE|Horse|8\-Game|HOSE|Hose|Omaha\sH/L\sMixed|Hold\'em\sMixed|PLH/PLO\sMixed|NLH/PLO\sMixed|Triple\sStud|NLH/NLO\sMixed|Mixed\sNLH/NLO|Mixed\sOmaha\sH/L|Mixed\sHold\'em|Mixed\sPLH/PLO|Mixed\sNLH/PLO)')
-    re_XLSTourneyInfo['Currency'] = re.compile(ur'(?P<CURRENCY>(%(LEGAL_ISO)s)?)' % substitutions)
-    re_XLSTourneyInfo['Buy-In'] = re.compile(ur'(?P<BUYIN>([,.0-9]+|Freeroll))(?P<FPPBUYIN>\s(FPP|SC|StarsCoin))?')
+    re_XLSTourneyInfo['Name'] = re.compile(r'(?P<TOURNAME>.*)')
+    re_XLSTourneyInfo['Game'] = re.compile(r'(?P<LIMIT>[ a-zA-Z\-]+)\s' \
+                                           r'(?P<SPLIT>Split)?\s?'
+                                           r'(?P<GAME>Hold\'em|Razz|RAZZ|7\sCard\sStud|7\sCard\sStud\sH/L|Omaha|Omaha\sH/L|Badugi|Triple\sDraw\s2\-7(\sLowball)?|Single\sDraw\s2\-7(\sLowball)?|5\sCard\sDraw|(5|6)\sCard\sOmaha(\sH/L)?|Courchevel(\sH/L)?|HORSE|Horse|8\-Game|HOSE|Hose|Omaha\sH/L\sMixed|Hold\'em\sMixed|PLH/PLO\sMixed|NLH/PLO\sMixed|Triple\sStud|NLH/NLO\sMixed|Mixed\sNLH/NLO|Mixed\sOmaha\sH/L|Mixed\sHold\'em|Mixed\sPLH/PLO|Mixed\sNLH/PLO)')
+    re_XLSTourneyInfo['Currency'] = re.compile(r'(?P<CURRENCY>(%(LEGAL_ISO)s)?)' % substitutions)
+    re_XLSTourneyInfo['Buy-In'] = re.compile(r'(?P<BUYIN>([,.0-9]+|Freeroll))(?P<FPPBUYIN>\s(FPP|SC|StarsCoin))?')
     re_XLSTourneyInfo['ReBuys'] = re.compile(r'(?P<REBUYADDON>[,.0-9]+)')
     re_XLSTourneyInfo['Rake'] =  re.compile(r'(?P<FEE>[,.0-9]+)')
     re_XLSTourneyInfo['Place'] = re.compile(r'(?P<RANK>[,.0-9]+)')
     re_XLSTourneyInfo['Entries'] = re.compile(r'(?P<ENTRIES>[,.0-9]+)')
-    re_XLSTourneyInfo['Prize'] = re.compile(ur'(?P<WINNINGS>[,.0-9]+)(?P<FPPWINNINGS>\s\+\s[,.0-9]+\s(FPP|SC|StarsCoin))?')
+    re_XLSTourneyInfo['Prize'] = re.compile(r'(?P<WINNINGS>[,.0-9]+)(?P<FPPWINNINGS>\s\+\s[,.0-9]+\s(FPP|SC|StarsCoin))?')
     re_XLSTourneyInfo['Bounty Awarded'] =  re.compile(r'(?P<KOS>[,.0-9]+)')
     re_XLSTourneyInfo['Target ID'] = re.compile(r'(?P<TARGET>[0-9]+)?')
     re_XLSTourneyInfo['Qualified'] = re.compile(r'(?P<WONTICKET>\*\\\/\*)?')
 
-    re_Player = re.compile(u"""(?P<RANK>[,.0-9]+):\s(?P<NAME>.+?)(\s\[(?P<ENTRYID>\d+)\])?\s\(.+?\),(\s)?((?P<CUR>[%(LS)s]?)(?P<WINNINGS>[,.0-9]+)(\s(?P<CUR1>(FPP|SC)))?)?(?P<STILLPLAYING>still\splaying)?((?P<TICKET>Tournament\sTicket)\s\(WSOP\sStep\s(?P<LEVEL>\d)\))?(?P<QUALIFIED>\s\(qualified\sfor\sthe\starget\stournament\)|Sunday\sMillion\s(ticket|biļete))?(\s+)?""" % substitutions)
-    re_HTMLPlayer1 = re.compile(ur"<h2>All\s+(?P<SNG>(Regular|Sit & Go))\s?Tournaments\splayed\sby\s'(<b>)?(?P<NAME>.+?)':?</h2>", re.IGNORECASE)
-    re_HTMLPlayer2 = re.compile(ur"<title>TOURNEYS:\s&lt;(?P<NAME>.+?)&gt;</title>", re.IGNORECASE)
+    re_Player = re.compile(r"""(?P<RANK>[,.0-9]+):\s(?P<NAME>.+?)(\s\[(?P<ENTRYID>\d+)\])?\s\(.+?\),(\s)?((?P<CUR>[%(LS)s]?)(?P<WINNINGS>[,.0-9]+)(\s(?P<CUR1>(FPP|SC)))?)?(?P<STILLPLAYING>still\splaying)?((?P<TICKET>Tournament\sTicket)\s\(WSOP\sStep\s(?P<LEVEL>\d)\))?(?P<QUALIFIED>\s\(qualified\sfor\sthe\starget\stournament\)|Sunday\sMillion\s(ticket|biļete))?(\s+)?""" % substitutions)
+    re_HTMLPlayer1 = re.compile(r"<h2>All\s+(?P<SNG>(Regular|Sit & Go))\s?Tournaments\splayed\sby\s'(<b>)?(?P<NAME>.+?)':?</h2>", re.IGNORECASE)
+    re_HTMLPlayer2 = re.compile(r"<title>TOURNEYS:\s&lt;(?P<NAME>.+?)&gt;</title>", re.IGNORECASE)
     re_XLSPlayer = re.compile(r'All\s(?P<SNG>(Regular|(Heads\sup\s)?Sit\s&\sGo))\sTournaments\splayed\sby\s\'(?P<NAME>.+?)\'')
     
-    re_DateTime = re.compile("""(?P<Y>[0-9]{4})\/(?P<M>[0-9]{2})\/(?P<D>[0-9]{2})[\- ]+(?P<H>[0-9]+):(?P<MIN>[0-9]+):(?P<S>[0-9]+)""", re.MULTILINE)
-    re_HTMLDateTime = re.compile("""(?P<M>[0-9]+)\/(?P<D>[0-9]+)\/(?P<Y>[0-9]{4})[\- ]+(?P<H>[0-9]+):(?P<MIN>[0-9]+):(?P<S>[0-9]+) (?P<AMPM>(AM|PM))""", re.MULTILINE)
-    re_HTMLTourneyExtraInfo = re.compile("\[(Deep\s)?((?P<MAX>\d+)-Max,\s?)?((\dx\-)?(?P<SPEED>Turbo|Hyper\-Turbo))?(, )?(?P<REBUYADDON1>\dR\dA)?")
-    re_XLSDateTime = re.compile("^[.0-9]+$")
-    re_Rank = re.compile(u"^You\sfinished\sin\s(?P<RANK>[0-9]+)(st|nd|rd|th)\splace\.", re.MULTILINE)
-    #re_WinningRankOne   = re.compile(u"^%(PLYR)s wins the tournament and receives %(CUR)s(?P<AMT>[\.0-9]+) - congratulations!$" %  substitutions, re.MULTILINE)
-    #re_WinningRankOther = re.compile(u"^%(PLYR)s finished the tournament in (?P<RANK>[0-9]+)(st|nd|rd|th) place and received %(CUR)s(?P<AMT>[.0-9]+)\.$" %  substitutions, re.MULTILINE)
-    #re_RankOther        = re.compile(u"^%(PLYR)s finished the tournament in (?P<RANK>[0-9]+)(st|nd|rd|th) place$" %  substitutions, re.MULTILINE)
+    re_DateTime = re.compile(r"""(?P<Y>[0-9]{4})\/(?P<M>[0-9]{2})\/(?P<D>[0-9]{2})[\- ]+(?P<H>[0-9]+):(?P<MIN>[0-9]+):(?P<S>[0-9]+)""", re.MULTILINE)
+    re_HTMLDateTime = re.compile(r"""(?P<M>[0-9]+)\/(?P<D>[0-9]+)\/(?P<Y>[0-9]{4})[\- ]+(?P<H>[0-9]+):(?P<MIN>[0-9]+):(?P<S>[0-9]+) (?P<AMPM>(AM|PM))""", re.MULTILINE)
+    re_HTMLTourneyExtraInfo = re.compile(r"\[(Deep\s)?((?P<MAX>\d+)-Max,\s?)?((\dx\-)?(?P<SPEED>Turbo|Hyper\-Turbo))?(, )?(?P<REBUYADDON1>\dR\dA)?")
+    re_XLSDateTime = re.compile(r"^[.0-9]+$")
+    re_Rank = re.compile(r"^You\sfinished\sin\s(?P<RANK>[0-9]+)(st|nd|rd|th)\splace\.", re.MULTILINE)
+    #re_WinningRankOne   = re.compile(r"^%(PLYR)s wins the tournament and receives %(CUR)s(?P<AMT>[\.0-9]+) - congratulations!$" %  substitutions, re.MULTILINE)
+    #re_WinningRankOther = re.compile(r"^%(PLYR)s finished the tournament in (?P<RANK>[0-9]+)(st|nd|rd|th) place and received %(CUR)s(?P<AMT>[.0-9]+)\.$" %  substitutions, re.MULTILINE)
+    #re_RankOther        = re.compile(r"^%(PLYR)s finished the tournament in (?P<RANK>[0-9]+)(st|nd|rd|th) place$" %  substitutions, re.MULTILINE)
 
     codepage = ["utf8", "cp1252"]
 
     @staticmethod
     def getSplitRe(self, head):
-        re_SplitTourneys = re.compile("(?:PokerStars|Full\sTilt) Tournament ")
-        re_HTMLSplitTourneys = re.compile("tr id=\"row_\d+")
+        re_SplitTourneys = re.compile(r"(?:PokerStars|Full\sTilt) Tournament ")
+        re_HTMLSplitTourneys = re.compile(r"tr id=\"row_\d+")
         m = re.search("<title>TOURNEYS:", head)
         if m != None:
             self.hhtype = "html"
@@ -359,7 +358,7 @@ class PokerStarsSummary(TourneySummary):
                 self.isKO = True
                 
             
-            re_HTMLEntries = re.compile(ur'<td align="center">%s</td>.+?<td align="?right"?>(?P<RANK>[,.0-9]+)</td>' % self.tourNo, re.IGNORECASE)
+            re_HTMLEntries = re.compile(r'<td align="center">%s</td>.+?<td align="?right"?>(?P<RANK>[,.0-9]+)</td>' % self.tourNo, re.IGNORECASE)
             m = re_HTMLEntries.finditer(self.header)
             entries = []
             for a in m:

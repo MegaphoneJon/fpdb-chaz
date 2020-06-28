@@ -51,7 +51,7 @@ def splitFullTiltSummaries(summaryText):#TODO: this needs to go to FTPS.py
     splitSummaries = re.split(re_SplitTourneys, summaryText)
 
     if len(splitSummaries) <= 1:
-		print(_("DEBUG:") + " " + _("Could not split tourneys"))
+	    print(_("DEBUG:") + " " + _("Could not split tourneys"))
 
     return splitSummaries
 

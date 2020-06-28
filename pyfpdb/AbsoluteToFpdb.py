@@ -74,7 +74,7 @@ class Absolute(HandHistoryConverter):
     #Seat 6 - FETS63 ($0.75 in chips)
     #Board [10s 5d Kh Qh 8c]
 
-    re_GameInfo = re.compile( ur"""
+    re_GameInfo = re.compile( r"""
               ^Stage\s+\#C?(?P<HID>[0-9]+):?\s+
               (?:Tourney\ ID\ (?P<TRNY_ID>\d+)\s+)?
               (?P<GAME>Holdem|HOLDEM|Seven\ Card\ Hi\/Lo|HORSE|Omaha|Omaha\ Hi\/Lo|OMAHA)\s+
@@ -93,20 +93,20 @@ class Absolute(HandHistoryConverter):
         """, re.MULTILINE|re.VERBOSE|re.DOTALL)
 
     re_HorseGameInfo = re.compile(
-            ur"^Game Type: (?P<LIMIT>Limit) (?P<GAME>Holdem)",
+            r"^Game Type: (?P<LIMIT>Limit) (?P<GAME>Holdem)",
             re.MULTILINE)
 
     re_HandInfo = re_GameInfo
 
     # TODO: that's not the right way to match for "dead" dealer is it?
-    re_Button = re.compile(ur"Seat #(?P<BUTTON>[0-9]) is the ?[dead]* dealer$", re.MULTILINE)
+    re_Button = re.compile(r"Seat #(?P<BUTTON>[0-9]) is the ?[dead]* dealer$", re.MULTILINE)
 
     re_PlayerInfo = re.compile(
-            ur"^Seat (?P<SEAT>[0-9]) - (?P<PNAME>.*) "\
-            ur"\((?:\$| €|)(?P<CASH>[0-9]*[.,0-9]+) in chips\)",
+            r"^Seat (?P<SEAT>[0-9]) - (?P<PNAME>.*) "\
+            r"\((?:\$| €|)(?P<CASH>[0-9]*[.,0-9]+) in chips\)",
             re.MULTILINE)
 
-    re_Board = re.compile(ur"\[(?P<CARDS>[^\]]*)\]? *$", re.MULTILINE)
+    re_Board = re.compile(r"\[(?P<CARDS>[^\]]*)\]? *$", re.MULTILINE)
     
     re_Pocket = re.compile(r"\*\*\* POCKET CARDS \*\*\*")
 
@@ -117,17 +117,17 @@ class Absolute(HandHistoryConverter):
             self.compiledPlayers = players
             player_re = "(?P<PNAME>" + "|".join(map(re.escape, players)) + ")"
             #(?P<CURRENCY>\$| €|)(?P<BB>[0-9]*[.0-9]+)
-            self.re_PostSB          = re.compile(ur"^%s - Posts small blind (?:\$| €|)(?P<SB>[,.0-9]+)" % player_re, re.MULTILINE)
-            self.re_PostBB          = re.compile(ur"^%s - Posts big blind (?:\$| €|)(?P<BB>[.,0-9]+)" % player_re, re.MULTILINE)
-            self.re_Post            = re.compile(ur"^%s - Posts (?:\$| €|)(?P<BB>[.,0-9]+)$" % player_re, re.MULTILINE)
+            self.re_PostSB          = re.compile(r"^%s - Posts small blind (?:\$| €|)(?P<SB>[,.0-9]+)" % player_re, re.MULTILINE)
+            self.re_PostBB          = re.compile(r"^%s - Posts big blind (?:\$| €|)(?P<BB>[.,0-9]+)" % player_re, re.MULTILINE)
+            self.re_Post            = re.compile(r"^%s - Posts (?:\$| €|)(?P<BB>[.,0-9]+)$" % player_re, re.MULTILINE)
             # TODO: Absolute posting when coming in new: %s - Posts $0.02 .. should that be a new Post line? where do we need to add support for that? *confused*
-            self.re_PostBoth        = re.compile(ur"^%s - Posts (dead )?(?:\$| €|)(?P<BB>[,.0-9]+) (dead )?(?:\$| €|)(?P<SB>[,.0-9]+)" % player_re, re.MULTILINE)
-            self.re_Action          = re.compile(ur"^%s - (?P<ATYPE>Bets |Raises |All-In |All-In\(Raise\) |Calls |Folds|Checks)?\$?(?P<BET>[,.0-9]+)?" % player_re, re.MULTILINE)
-            self.re_ShowdownAction  = re.compile(ur"^%s - Shows \[(?P<CARDS>.*)\] \((?P<STRING>.+?)\)" % player_re, re.MULTILINE)
-            self.re_CollectPot      = re.compile(ur"^Seat [0-9]: %s(?: \(dealer\)|)(?: \(big blind\)| \(small blind\)|) (?:won|collected) Total \((?:\$| €|)(?P<POT>[,.0-9]+)\)(.*72 Prop Win \((?:\$| €|)(?P<PROP>[,.0-9]+)\))?" % player_re, re.MULTILINE)
-            self.re_Antes           = re.compile(ur"^%s - Ante (?:\$| €|)(?P<ANTE>[,.0-9]+)" % player_re, re.MULTILINE)
-            self.re_BringIn         = re.compile(ur"^%s - Bring-In (?:\$| €|)(?P<BRINGIN>[.0-9]+)\." % player_re, re.MULTILINE)
-            self.re_HeroCards       = re.compile(ur"^(Dealt to )?%s (- Pocket )?\[(?P<CARDS>.*)\]" % player_re, re.MULTILINE)
+            self.re_PostBoth        = re.compile(r"^%s - Posts (dead )?(?:\$| €|)(?P<BB>[,.0-9]+) (dead )?(?:\$| €|)(?P<SB>[,.0-9]+)" % player_re, re.MULTILINE)
+            self.re_Action          = re.compile(r"^%s - (?P<ATYPE>Bets |Raises |All-In |All-In\(Raise\) |Calls |Folds|Checks)?\$?(?P<BET>[,.0-9]+)?" % player_re, re.MULTILINE)
+            self.re_ShowdownAction  = re.compile(r"^%s - Shows \[(?P<CARDS>.*)\] \((?P<STRING>.+?)\)" % player_re, re.MULTILINE)
+            self.re_CollectPot      = re.compile(r"^Seat [0-9]: %s(?: \(dealer\)|)(?: \(big blind\)| \(small blind\)|) (?:won|collected) Total \((?:\$| €|)(?P<POT>[,.0-9]+)\)(.*72 Prop Win \((?:\$| €|)(?P<PROP>[,.0-9]+)\))?" % player_re, re.MULTILINE)
+            self.re_Antes           = re.compile(r"^%s - Ante (?:\$| €|)(?P<ANTE>[,.0-9]+)" % player_re, re.MULTILINE)
+            self.re_BringIn         = re.compile(r"^%s - Bring-In (?:\$| €|)(?P<BRINGIN>[.0-9]+)\." % player_re, re.MULTILINE)
+            self.re_HeroCards       = re.compile(r"^(Dealt to )?%s (- Pocket )?\[(?P<CARDS>.*)\]" % player_re, re.MULTILINE)
 
     def readSupportedGames(self):
         return [["ring", "hold", "nl"],

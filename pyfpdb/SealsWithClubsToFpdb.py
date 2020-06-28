@@ -49,7 +49,7 @@ class SealsWithClubs(HandHistoryConverter):
                }
 
     # Static regexes
-    re_GameInfo = re.compile(ur"""Hand\s*\#(?P<HID>\d+)-\d+\s*-\s*(?P<DATETIME>[\-:\d ]+)\s*
+    re_GameInfo = re.compile(r"""Hand\s*\#(?P<HID>\d+)-\d+\s*-\s*(?P<DATETIME>[\-:\d ]+)\s*
                          Game:\s*(?P<LIMIT>(NL|PL|Limit))\s*(?P<GAME>(Hold'em|Omaha|Omaha\ Hi-Lo))
                          \s*\([\d\.]+\s*-\s*(?P<BUYIN>\d+)\)\s*-\s*
                          (Blinds|Stakes)\s*(?P<SB>[\d\.]+)/(?P<BB>[\d.]+)\s*
@@ -57,20 +57,20 @@ class SealsWithClubs(HandHistoryConverter):
                          (Table:\sL\w+\s\d+(max|half|deep)\s(?P<SB1>[\d\.]+)/(?P<BB1>[\d.]+))?""",re.VERBOSE)
     # TODO: for tournaments: (?P<BIAMT>[\d\.]+)\+(?P<BIRAKE>[\d\.]+)
 
-    re_PlayerInfo   = re.compile(ur"""
+    re_PlayerInfo   = re.compile(r"""
         ^\s?Seat\s+(?P<SEAT>\d+):\s*
         (?P<PNAME>.*)\s+
         \((?P<CASH>[.\d]+)\)""" % substitutions, 
         re.MULTILINE|re.VERBOSE)
 
-    re_HandInfo = re.compile(ur"""^Table:\s(?P<TABLE>(.+)?((?P<HU>HU)|((?P<MAX>\d+)(max|half|deep))|No Rake Micro Stakes).*)""",re.MULTILINE)
+    re_HandInfo = re.compile(r"""^Table:\s(?P<TABLE>(.+)?((?P<HU>HU)|((?P<MAX>\d+)(max|half|deep))|No Rake Micro Stakes).*)""",re.MULTILINE)
 
     re_Identify     = re.compile(u"Site:\s*Seals\s*With\s*Clubs")
     re_SplitHands   = re.compile('(?:\s?\n){2,}')
-    re_ButtonName   = re.compile(ur"""^(?P<BUTTONNAME>.*) has the dealer button""",re.MULTILINE)
+    re_ButtonName   = re.compile(r"""^(?P<BUTTONNAME>.*) has the dealer button""",re.MULTILINE)
     
     re_Board        = re.compile(r"\[(?P<CARDS>.+)\]")
-    re_DateTime     = re.compile(ur"""(?P<Y>\d{4})-(?P<M>\d{2})-(?P<D>\d{2})[\-\s]+(?P<H>\d+):(?P<MIN>\d+):(?P<S>\d+)""", re.MULTILINE)
+    re_DateTime     = re.compile(r"""(?P<Y>\d{4})-(?P<M>\d{2})-(?P<D>\d{2})[\-\s]+(?P<H>\d+):(?P<MIN>\d+):(?P<S>\d+)""", re.MULTILINE)
 
     # These used to be compiled per player, but regression tests say
     # we don't have to, and it makes life faster.
@@ -199,7 +199,7 @@ class SealsWithClubs(HandHistoryConverter):
         m = self.re_ButtonName.search(hand.handText)
         if m:
             dealer = m.group('BUTTONNAME')
-            re_Button = re.compile(ur"""Seat\s+(?P<BUTTON>\d+):\s+%s""" % dealer)
+            re_Button = re.compile(r"""Seat\s+(?P<BUTTON>\d+):\s+%s""" % dealer)
             m = re_Button.search(hand.handText)
             hand.buttonpos = int(m.group('BUTTON'));
         else:

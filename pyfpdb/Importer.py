@@ -29,7 +29,7 @@ _ = L10n.get_translation()
 #    Standard Library modules
 
 import os  # todo: remove this once import_dir is in fpdb_import
-from time import time, sleep, clock
+from time import time, sleep
 import datetime
 import queue
 import shutil
@@ -101,7 +101,6 @@ class Importer(object):
         for i in range(self.settings['threads']):
             self.writerdbs.append( Database.Database(self.config, sql = self.sql) )
 
-        clock() # init clock in windows
 
     #Set functions
     def setMode(self, value):

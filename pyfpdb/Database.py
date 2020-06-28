@@ -59,7 +59,7 @@ import logging
 import random
 
 re_char = re.compile('[^a-zA-Z]')
-re_insert = re.compile("insert\sinto\s(?P<TABLENAME>[A-Za-z]+)\s(?P<COLUMNS>\(.+?\))\s+values", re.DOTALL)
+re_insert = re.compile(r"insert\sinto\s(?P<TABLENAME>[A-Za-z]+)\s(?P<COLUMNS>\(.+?\))\s+values", re.DOTALL)
 
 #    FreePokerTools modules
 import SQL
