@@ -116,7 +116,7 @@ class ChooseLanguage(object):
         
     def getLanguage(self):
         import string
-        return string.split(self.selected_language, " -- ", 1)[0]
+        return str.split(self.selected_language, " -- ", 1)[0]
 
 #=====================================================================
 

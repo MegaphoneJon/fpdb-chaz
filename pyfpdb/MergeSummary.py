@@ -21,7 +21,7 @@ _ = L10n.get_translation()
 
 from decimal_wrapper import Decimal
 import datetime
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 from Exceptions import FpdbParseError
 from HandHistoryConverter import *

@@ -405,14 +405,14 @@ class Filters(QWidget):
 
         for site in self.conf.get_supported_sites():
             player = self.conf.supported_sites[site].screen_name
-            _pname = Charset.to_gui(player)
+            _pname = player
             vbox.addWidget(QLabel(site +" id:"))
 
             self.leHeroes[site] = QLineEdit(_pname)
             vbox.addWidget(self.leHeroes[site])
 
             names = self.db.get_player_names(self.conf, self.siteid[site])
-            completer = QCompleter([Charset.to_gui(n[0]) for n in names])
+            completer = QCompleter([n[0] for n in names])
             self.leHeroes[site].setCompleter(completer)
 
         if "GroupsAll" in display and display["GroupsAll"]:

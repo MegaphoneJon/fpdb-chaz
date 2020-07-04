@@ -4,7 +4,7 @@ from future import standard_library
 standard_library.install_aliases()
 import urllib.request, urllib.error, urllib.parse, re
 import pprint
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 
 playername = ''

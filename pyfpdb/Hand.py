@@ -1181,11 +1181,11 @@ class HoldemOmahaHand(Hand):
                 if len(self.holecards[street][player][1])==1: continue
                 for i in 0,1:
                     hcs[i] = self.holecards[street][player][1][i]
-                    hcs[i] = hcs[i][0:1].upper+hcs[i][1:2]
+                    hcs[i] = hcs[i][0:1].upper()+hcs[i][1:2]
                 try:
                     for i in range(2, holeNo):
                         hcs[i] = self.holecards[street][player][1][i]
-                        hcs[i] = hcs[i][0:1].upper+hcs[i][1:2]
+                        hcs[i] = hcs[i][0:1].upper()+hcs[i][1:2]
                 except IndexError:
                     log.debug("Why did we get an indexerror?")
 

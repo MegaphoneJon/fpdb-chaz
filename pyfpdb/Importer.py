@@ -442,7 +442,7 @@ class Importer(object):
             hhc.setAutoPop(self.mode=='auto')
             hhc.start()
             
-            self.pos_in_file[file] = hhc.getLastCharacterRead()
+            self.pos_in_file[fpdbfile.path] = hhc.getLastCharacterRead()
             #Tally the results
             partial  = getattr(hhc, 'numPartial')
             skipped  = getattr(hhc, 'numSkipped')

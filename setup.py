@@ -47,8 +47,8 @@ class inst_translations(INST):
         paths = glob.glob(_globstr)
         _locales = []
         for p in paths:
-            rp = string.split(p, '/', 2)
-            (lang, loc, mo) = string.split(rp[2], '/')
+            rp = str.split(p, '/', 2)
+            (lang, loc, mo) = str.split(rp[2], '/')
             _locales.append( (lang, loc, mo) )
         return _locales
 

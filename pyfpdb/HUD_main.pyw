@@ -33,7 +33,7 @@ _ = L10n.init_translation()
 import codecs
 import sys
 import os
-import thread
+import _thread
 import time
 import string
 import logging
@@ -167,14 +167,14 @@ class HUD_main(QObject):
         self.kill_hud(None, hud.table.key)
 
 #    def game_changed(self, widget, hud):
-#        print "hud_main: " + _("Game changed.")
+#        print("hud_main: ") + _("Game changed.")
 
     def table_title_changed(self, widget, hud):
-        print "hud_main: " + _("Table title changed, killing current hud")
+        print("hud_main: ") + _("Table title changed, killing current hud")
         self.kill_hud(None, hud.table.key)
 
     def table_is_stale(self, hud):
-        print "hud_main: " + _("Moved to a new table, killing current hud")
+        print("hud_main: ") + _("Moved to a new table, killing current hud")
         self.kill_hud(None, hud.table.key)
         
     def destroy(self, *args):             # call back for terminating the main eventloop
@@ -327,7 +327,7 @@ class HUD_main(QObject):
 #       Note that this will reset the aggretation params for that table
         if temp_key in self.hud_dict:
             if self.hud_dict[temp_key].poker_game != poker_game:
-                print "game changed!:", poker_game
+                print("game changed!:", poker_game)
                 try:
                     self.kill_hud("activate", temp_key)   # kill everything
                     while temp_key in self.hud_dict: time.sleep(0.5)   # wait for idle_kill to complete
@@ -339,7 +339,7 @@ class HUD_main(QObject):
             # get stats using hud's specific params and get cards
             self.db_connection.init_hud_stat_vars( self.hud_dict[temp_key].hud_params['hud_days']
                                                  , self.hud_dict[temp_key].hud_params['h_hud_days'])
-            #print "update an existing hud ", temp_key, self.hud_dict[temp_key].hud_params
+            #print("update an existing hud ", temp_key, self.hud_dict[temp_key].hud_params)
             stat_dict = self.db_connection.get_stats_from_hand(new_hand_id, type, self.hud_dict[temp_key].hud_params,
                                                                self.hero_ids[site_id], num_seats)
 
