@@ -43,7 +43,7 @@ try:
             print(e)
     from matplotlib.figure import Figure
     from matplotlib.backends.backend_qt5agg import FigureCanvas
-    from matplotlib.finance import candlestick_ochl
+    from mplfinance.original_flavor import candlestick_ochl
 
     from numpy import diff, nonzero, sum, cumsum, max, min, append
 
