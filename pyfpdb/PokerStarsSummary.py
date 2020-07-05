@@ -79,7 +79,7 @@ class PokerStarsSummary(TourneySummary):
 
     substitutions = {
                      'LEGAL_ISO' : "USD|EUR|GBP|CAD|FPP|SC|INR|CNY",    # legal ISO currency codes
-                            'LS' : r"\$|\xe2\x82\xac|\u20AC||\£|\u20b9|\¥|" # legal currency symbols - Euro(cp1252, utf-8)
+                            'LS' : r"\$|\€|\£|\₹|\¥|" # legal currency symbols
                     }
     
     re_Identify = re.compile(r'((PokerStars|Full\sTilt)\sTournament\s\#\d+|<title>TOURNEYS:)')
