@@ -34,12 +34,12 @@ class Entraction(HandHistoryConverter):
     codepage = ("utf8", "cp1252")
     siteId   = 18
     
-    sym = {'USD': "\$", 'CAD': "\$", 'T$': "", "EUR": "\xe2\x82\xac", "GBP": "\xa3", "play": ""}
+    sym = {'USD': "\$", 'CAD': "\$", 'T$': "", "EUR": "€", "GBP": "\xa3", "play": ""}
     substitutions = {
                      'LEGAL_ISO' : "EUR|Fun|",
-                            'LS' : u"\$|\xe2\x82\xac|\u20ac|\£|", # legal currency symbols - Euro(cp1252, utf-8)
+                            'LS' : u"\$|€|\£|", # legal currency symbols - Euro(cp1252, utf-8)
                            'PLYR': r'(?P<PNAME>.+?)',
-                            'CUR': u"(\$|\xe2\x82\xac|\u20ac|)",
+                            'CUR': u"(\$|€|)",
                             'NUM': u".,\d",
                     }
                     

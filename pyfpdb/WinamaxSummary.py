@@ -47,7 +47,7 @@ class WinamaxSummary(TourneySummary):
 
     substitutions = {
                      'LEGAL_ISO' : "USD|EUR|GBP|CAD|FPP",     # legal ISO currency codes
-                            'LS' : u"\$|\xe2\x82\xac|\u20ac|" # legal currency symbols
+                            'LS' : u"\$|€|" # legal currency symbols
                     }
     
     re_Identify = re.compile(u"Winamax\sPoker\s\-\sTournament\ssummary")

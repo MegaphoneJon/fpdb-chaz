@@ -38,13 +38,13 @@ class PacificPoker(HandHistoryConverter):
     siteId   = 10 # Needs to match id entry in Sites database
 
     mixes = { 'HORSE': 'horse', '8-Game': '8game', 'HOSE': 'hose'} # Legal mixed games
-    sym = {'USD': "\$", 'CAD': "\$", 'T$': "", "EUR": "\xe2\x82\xac", "GBP": "\xa3", "play": ""}         # ADD Euro, Sterling, etc HERE
+    sym = {'USD': "\$", 'CAD': "\$", 'T$': "", "EUR": "€", "GBP": "\xa3", "play": ""}         # ADD Euro, Sterling, etc HERE
     substitutions = {
                      'LEGAL_ISO' : "USD|EUR|GBP|CAD|FPP",     # legal ISO currency codes
                            'PLYR': r'(?P<PNAME>.+?)',
-                            'LS' : u"\$|\xe2\x82\xac|\u20ac|", # legal currency symbols - Euro(cp1252, utf-8)
+                            'LS' : u"\$|€|", # legal currency symbols - Euro(cp1252, utf-8)
                            'NUM' : u"\s.,\d\xa0",
-                           'CUR' : u"(\$|\xe2\x82\xac|\u20ac|)"
+                           'CUR' : u"(\$|€|)"
                     }
                     
     # translations from captured groups to fpdb info strings

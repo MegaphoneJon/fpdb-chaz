@@ -42,7 +42,7 @@ class Pkr(HandHistoryConverter):
     sym = {'USD': "\$", 'T$': "", "EUR": u"\u20ac", "GBP": u"\£"} # ADD Euro, Sterling, etc HERE
     substitutions = {
                      'LEGAL_ISO' : "USD|EUR|GBP",    # legal ISO currency codes
-                            'LS' : u"\$|\xe2\x82\xac|\u20ac|\£|", # legal currency symbols - Euro(cp1252, utf-8)
+                            'LS' : u"\$|€|\£|", # legal currency symbols - Euro(cp1252, utf-8)
                            'NUM' : u".,\d",
                     }
 

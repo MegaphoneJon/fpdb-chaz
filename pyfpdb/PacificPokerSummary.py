@@ -40,7 +40,7 @@ class PacificPokerSummary(TourneySummary):
 
     substitutions = {
                      'LEGAL_ISO' : "USD|EUR|GBP|CAD|FPP",      # legal ISO currency codes
-                            'LS' : u"\$|\xe2\x82\xac|\u20AC|", # legal currency symbols
+                            'LS' : u"\$|€|", # legal currency symbols
                            'NUM' : u".,\d\xa0"                     # legal characters in number format
                     }
     

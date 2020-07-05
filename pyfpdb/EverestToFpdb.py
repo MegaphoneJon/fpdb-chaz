@@ -38,7 +38,7 @@ class Everest(HandHistoryConverter):
     copyGameHeader = True
 
     substitutions = {
-                        'LS' : u"\$|\xe2\x82\xac|\u20ac|",
+                        'LS' : u"\$|€|",
                        'TAB' : u"-\u2013'\s\da-zA-Z",
                        'NUM' : u".,\d\s",
                     }

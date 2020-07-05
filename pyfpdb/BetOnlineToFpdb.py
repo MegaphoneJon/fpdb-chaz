@@ -41,9 +41,9 @@ class BetOnline(HandHistoryConverter):
     filetype = "text"
     codepage = ("utf8", "cp1252")
     siteId   = 19 # Needs to match id entry in Sites database
-    sym = {'USD': "\$", 'CAD': "\$", 'T$': "", "EUR": "\xe2\x82\xac", "GBP": "\xa3", "play": ""}         # ADD Euro, Sterling, etc HERE
+    sym = {'USD': "\$", 'CAD': "\$", 'T$': "", "EUR": "€", "GBP": "\xa3", "play": ""}         # ADD Euro, Sterling, etc HERE
     substitutions = {
-                     'LS' : u"\$|\xe2\x82\xac|\u20ac|", # legal currency symbols - Euro(cp1252, utf-8)
+                     'LS' : u"\$|€|", # legal currency symbols - Euro(cp1252, utf-8)
                      'PLYR': r'(?P<PNAME>.+?)',
                      'NUM' :u".,\d",
                     }

@@ -28,7 +28,7 @@ from TourneySummary import *
 
 class iPokerSummary(TourneySummary):
     substitutions = {
-                     'LS'  : u"\$|\xe2\x82\xac|\xe2\u201a\xac|\u20ac|\xc2\xa3|\£|RSD|",
+                     'LS'  : u"\$|€|\xe2\u201a\xac|\u20ac|\xc2\xa3|\£|RSD|",
                      'PLYR': r'(?P<PNAME>[^"]+)',
                      'NUM' : r'.,0-9',
                     }

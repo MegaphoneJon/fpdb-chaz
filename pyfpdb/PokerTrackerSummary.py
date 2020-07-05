@@ -40,10 +40,10 @@ class PokerTrackerSummary(TourneySummary):
 
     substitutions = {
                      'LEGAL_ISO' : "USD|EUR|GBP|CAD|FPP",      # legal ISO currency codes
-                            'LS' : u"\$|\xe2\x82\xac|\u20ac|\£|P|SC|", # legal currency symbols - Euro(cp1252, utf-8)
+                            'LS' : u"\$|€|\£|P|SC|", # legal currency symbols - Euro(cp1252, utf-8)
                            'PLYR': r'(?P<PNAME>.+?)',
                            'NUM' : u".,\d",
-                            'CUR': u"(\$|\xe2\x82\xac|\u20ac||\£|)",
+                            'CUR': u"(\$|€||\£|)",
                     }
 
     re_Identify = re.compile(u"PokerTracker")

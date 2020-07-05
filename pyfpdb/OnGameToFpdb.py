@@ -43,9 +43,9 @@ class OnGame(HandHistoryConverter):
     sym = {'USD': "\$", 'CAD': "\$", 'T$': "", "EUR": u"\u20ac", "GBP": "\xa3"}
     substitutions = {
                      'LEGAL_ISO' : "USD|EUR|GBP|CAD|FPP",    # legal ISO currency codes
-                            'LS' : u"\$|\xe2\x82\xac|\u20ac|",     # Currency symbols - Euro(cp1252, utf-8)
+                            'LS' : u"\$|€|",     # Currency symbols - Euro(cp1252, utf-8)
                            'PLYR': r'(?P<PNAME>.+?)',
-                            'CUR': u"(\$|\xe2\x82\xac|\u20ac||\£|)",
+                            'CUR': u"(\$|€||\£|)",
                            'NUM' : u".,\dKM",
                     }
     
@@ -69,7 +69,7 @@ class OnGame(HandHistoryConverter):
                       '1000.00': ('250.00', '500.00'),'1000': ('250.00', '500.00'),
                   }
     
-    currencies = { u'\u20ac':'EUR', u'\xe2\x82\xac':'EUR', '$':'USD', '':'T$' }
+    currencies = { u'\u20ac':'EUR', u'€':'EUR', '$':'USD', '':'T$' }
 
     limits = { 'NO_LIMIT':'nl', 'POT_LIMIT':'pl', 'LIMIT':'fl'}
 

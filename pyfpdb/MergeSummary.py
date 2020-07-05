@@ -77,7 +77,7 @@ class MergeSummary(TourneySummary):
 
     substitutions = {
                      'LEGAL_ISO' : "USD|EUR|GBP|CAD|FPP",     # legal ISO currency codes
-                            'LS' : u"\$|\xe2\x82\xac|\u20ac|" # legal currency symbols
+                            'LS' : u"\$|€|" # legal currency symbols
                     }
     re_Identify   = re.compile(u"<title>Online\sPoker\sTournament\sDetails\s\-\sCarbonPoker</title>")
     re_NotFound   = re.compile(u"Tournament not found")

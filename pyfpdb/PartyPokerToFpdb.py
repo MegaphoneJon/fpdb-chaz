@@ -41,10 +41,10 @@ class PartyPoker(HandHistoryConverter):
     siteId = 9
     filetype = "text"
     sym        = {'USD': "\$", 'EUR': u"\u20ac", 'T$': "", 'play':'play'}
-    currencies = {"\$": "USD", "$": "USD", u"\xe2\x82\xac": "EUR", u"\u20ac": "EUR", '': "T$", 'play':'play'}
+    currencies = {"\$": "USD", "$": "USD", u"€": "EUR", u"\u20ac": "EUR", '': "T$", 'play':'play'}
     substitutions = {
                      'LEGAL_ISO' : "USD|EUR",            # legal ISO currency codes
-                            'LS' : u"\$|\u20ac|\xe2\x82\xac|",    # Currency symbols - Euro(cp1252, utf-8)
+                            'LS' : u"\$|\u20ac|€|",    # Currency symbols - Euro(cp1252, utf-8)
                            'NUM' : u".,'\dKMB",
                     }
     limits = { 'NL':'nl', 'PL':'pl', '':'fl', 'FL':'fl', 'Limit':'fl' }

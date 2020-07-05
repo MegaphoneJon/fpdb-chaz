@@ -41,7 +41,7 @@ class PokerStars(HandHistoryConverter):
     filetype = "text"
     codepage = ("utf8", "cp1252", "ISO-8859-1")
     siteId   = 2 # Needs to match id entry in Sites database
-    sym = {'USD': "\$", 'CAD': "\$", 'T$': "", "EUR": "\xe2\x82\xac", "GBP": "\£", "play": "", "INR": "\₹", "CNY": "\¥"}         # ADD Euro, Sterling, etc HERE
+    sym = {'USD': "\$", 'CAD': "\$", 'T$': "", "EUR": "€", "GBP": "\£", "play": "", "INR": "\₹", "CNY": "\¥"}         # ADD Euro, Sterling, etc HERE
     substitutions = {
                      'LEGAL_ISO' : "USD|EUR|GBP|CAD|FPP|SC|INR|CNY",      # legal ISO currency codes
                             'LS' : u"\$|\€|\£|\₹|\¥|", # legal currency symbols - Euro(cp1252, utf-8)
@@ -243,7 +243,7 @@ class PokerStars(HandHistoryConverter):
             subst = {
                 'PLYR': player_re,
                 'BRKTS': r'(\(button\) |\(small blind\) |\(big blind\) |\(button\) \(small blind\) |\(button\) \(big blind\) )?',
-                'CUR': u"(\$|\xe2\x82\xac|\u20ac||\£|)"
+                'CUR': u"(\$|€||\£|)"
             }
             if self.siteId == 26:
                 self.re_HeroCards = re.compile(r"^Dealt to (?P<PNAME>(?![A-Z][a-z]+\s[A-Z]).+?)(?: \[(?P<OLDCARDS>.+?)\])?( \[(?P<NEWCARDS>.+?)\])" % subst, re.MULTILINE)
