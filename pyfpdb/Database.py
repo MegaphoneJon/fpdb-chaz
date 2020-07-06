@@ -1034,7 +1034,8 @@ class Database(object):
         c.execute (q, (hand_id, ))
         row = c.fetchone()
         gameinfo = {'sitename':row[0],'category':row[1],'base':row[2],'type':row[3],'limitType':row[4],
-                'hilo':row[5],'sb':row[6],'bb':row[7], 'sbet':row[8],'bbet':row[9], 'currency':row[10], 'gametypeId':row[11]}
+                'hilo':row[5],'sb':row[6],'bb':row[7], 'sbet':row[8],'bbet':row[9], 'currency':row[10],
+                'gametypeId':row[11], 'split':row[12]}
         return gameinfo
         
 #   Query 'get_hand_info' does not exist, so it seems

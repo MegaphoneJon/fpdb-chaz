@@ -3747,7 +3747,8 @@ class Sql(object):
                         round(g.smallBet / 100.0,2),
                         round(g.bigBet / 100.0,2),
                         g.currency,
-                        h.gametypeId
+                        h.gametypeId,
+                        g.split
                     FROM
                         Hands as h,
                         Sites as s,
