@@ -31,7 +31,6 @@ import L10n
 _ = L10n.get_translation()
 
 #    Standard Library modules
-import string
 import logging
 import copy
 
@@ -111,7 +110,7 @@ class Hud(object):
         # if there are AUX windows configured, set them up
         if not self.supported_games_parameters['aux'] == [""]:
             for aux in self.supported_games_parameters['aux'].split(","):
-                aux=string.strip(aux) # remove leading/trailing spaces
+                aux=aux.strip() # remove leading/trailing spaces
                 aux_params = config.get_aux_parameters(aux)
                 my_import = importName(aux_params['module'], aux_params['class'])
                 if my_import == None:

@@ -35,7 +35,6 @@ import sys
 import os
 import _thread
 import time
-import string
 import logging
 
 from PyQt5.QtCore import (QCoreApplication, QMetaObject, QObject, Qt,
@@ -80,7 +79,7 @@ class Reader(QObject):
                             # Flooding normally occurs when the hud "fast forwards"
                             # at tables where a bunch of hands have already been played
                             # with the HUD switched off.
-            new_hand_id = string.rstrip(sys.stdin.readline())
+            new_hand_id = sys.stdin.readline().rstrip()
             log.debug(_("Received hand no %s") % new_hand_id)
             self.handRead.emit(new_hand_id)
 
