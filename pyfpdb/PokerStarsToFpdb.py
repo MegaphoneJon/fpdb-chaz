@@ -367,8 +367,9 @@ class PokerStars(HandHistoryConverter):
             log.error(_("PokerStarsToFpdb.readHandInfo: '%s'") % tmp)
             raise FpdbParseError
 
-        info.update(m.groupdict())
         info.update(m2.groupdict())
+        info.update(m.groupdict())
+
 
         #log.debug("readHandInfo: %s" % info)
         for key in info:
