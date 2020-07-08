@@ -28,6 +28,8 @@ import re
 import logging
 
 from PyQt5.QtGui import QWindow
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget
 
 #    Other Library modules
 import xcffib, xcffib.xproto
@@ -106,6 +108,8 @@ class Table(Table_Window):
             self.gdkhandle = QWindow.fromWinId(int(self.number))
 
 #   This is the gdkhandle for the HUD window
-        gdkwindow = (window.windowHandle())
+        qwindow = (window.windowHandle())
 
-        gdkwindow.setTransientParent(self.gdkhandle)
+        qwindow.setTransientParent(self.gdkhandle)
+        # Setting this prevents each window from appearing in the task bar, but also prevents mouseovers.
+        # qwindow.setFlags(qwindow.flags() | ~Qt.WindowDoesNotAcceptFocus)
