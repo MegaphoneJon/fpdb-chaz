@@ -469,6 +469,7 @@ class Database(object):
         self.db_ip    = node.getAttribute("db_ip")
         self.db_user   = node.getAttribute("db_user")
         self.db_pass   = node.getAttribute("db_pass")
+        self.db_path   = node.getAttribute("db_path")
         self.db_selected = string_to_bool(node.getAttribute("default"), default=False)
         log.debug("Database db_name:'%(name)s'  db_server:'%(server)s'  db_ip:'%(ip)s'  db_user:'%(user)s'  db_pass (not logged)  selected:'%(sel)s'" \
                 % { 'name':self.db_name, 'server':self.db_server, 'ip':self.db_ip, 'user':self.db_user, 'sel':self.db_selected} )
@@ -818,7 +819,6 @@ class Config(object):
         else:
             self.dir_log = os.path.join(CONFIG_PATH, u'log')
         self.log_file = os.path.join(self.dir_log, u'fpdb-log.txt')
-        self.dir_database = os.path.join(CONFIG_PATH, u'database')
         log = logging.getLogger("config")
 
 #    "file" is a path to an xml file with the fpdb/HUD configuration
@@ -956,6 +956,8 @@ class Config(object):
             self.ui = hui
 
         db = self.get_db_parameters()
+        # Set the db path if it's defined in HUD_config.xml (sqlite only), otherwise place in config path.
+        self.dir_database = db['db-path'] if db['db-path'] else os.path.join(CONFIG_PATH, u'database')
         if db['db-password'] == 'YOUR MYSQL PASSWORD':
             df_file = self.find_default_conf()
             if df_file is None: # this is bad
@@ -1253,6 +1255,9 @@ class Config(object):
         except: pass
 
         try:    db['db-server'] = self.supported_databases[name].db_server
+        except: pass
+
+        try:    db['db-path'] = self.supported_databases[name].db_path
         except: pass
 
         db['db-backend'] = self.get_backend(self.supported_databases[name].db_server)
