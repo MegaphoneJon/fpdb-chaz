@@ -18,12 +18,11 @@
 from __future__ import print_function
 import PokerStarsToFpdb
 from Hand import *
-import py
 
 import Configuration
 import Database
 import SQL
-import fpdb_import
+import Importer
 
 config = Configuration.Config(file = "HUD_config.test.xml")
 db = Database.Database(config)
@@ -78,7 +77,7 @@ def testGameInfo():
 
 def testFlopImport():
     db.recreate_tables()
-    importer = fpdb_import.Importer(False, settings, config)
+    importer = Importer.Importer(False, settings, config)
     importer.setDropIndexes("don't drop")
     importer.setFailOnError(True)
     importer.setThreads(-1)
@@ -162,7 +161,7 @@ and s.id = p.siteid"""
 
 def testStudImport():
     db.recreate_tables()
-    importer = fpdb_import.Importer(False, settings, config)
+    importer = Importer.Importer(False, settings, config)
     importer.setDropIndexes("don't drop")
     importer.setFailOnError(True)
     importer.setThreads(-1)
@@ -182,7 +181,7 @@ def testStudImport():
 def testDrawImport():
     try:
         db.recreate_tables()
-        importer = fpdb_import.Importer(False, settings, config)
+        importer = Importer.Importer(False, settings, config)
         importer.setDropIndexes("don't drop")
         importer.setFailOnError(True)
         importer.setThreads(-1)
