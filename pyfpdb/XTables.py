@@ -109,7 +109,7 @@ class Table(Table_Window):
 
 #   This is the gdkhandle for the HUD window
         qwindow = (window.windowHandle())
-
         qwindow.setTransientParent(self.gdkhandle)
-        # Setting this prevents each window from appearing in the task bar, but also prevents mouseovers.
-        # qwindow.setFlags(qwindow.flags() | ~Qt.WindowDoesNotAcceptFocus)
+        # Qt.Dialog keeps HUD windows above the table (but not above anything else)
+        # Qy.CustomizedWindowHing removes the title bar.
+        qwindow.setFlags(Qt.CustomizeWindowHint | Qt.Dialog)
