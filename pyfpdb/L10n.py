@@ -17,7 +17,8 @@
 
 #You may find http://boodebr.org/main/python/all-about-python-and-unicode helpful
 
-def pass_through(to_translate): return to_translate
+def pass_through(to_translate):
+    return to_translate
 
 def set_translation(to_lang):
 

@@ -166,14 +166,14 @@ class HUD_main(QObject):
         self.kill_hud(None, hud.table.key)
 
 #    def game_changed(self, widget, hud):
-#        print("hud_main: ") + _("Game changed.")
+#        print("hud_main: " + _("Game changed."))
 
     def table_title_changed(self, widget, hud):
-        print("hud_main: ") + _("Table title changed, killing current hud")
+        print("hud_main: " + _("Table title changed, killing current hud"))
         self.kill_hud(None, hud.table.key)
 
     def table_is_stale(self, hud):
-        print("hud_main: ") + _("Moved to a new table, killing current hud")
+        print("hud_main: " + _("Moved to a new table, killing current hud"))
         self.kill_hud(None, hud.table.key)
         
     def destroy(self, *args):             # call back for terminating the main eventloop
