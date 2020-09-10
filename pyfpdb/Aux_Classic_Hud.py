@@ -83,9 +83,8 @@ class Classic_Stat_Window(Aux_Hud.Simple_Stat_Window):
         # control kill/display of active/inactive player stat blocks
         if self.aw.get_id_from_seat(i) is None:
             #no player dealt in this seat for this hand
-            # dim the display to indicate that this block
-            # is currently inactive
-            self.setWindowOpacity(float(self.aw.params['opacity'])*0.3)
+            # hide the display
+            self.hide()
         else:
             #player dealt-in, force display of stat block
             #need to call move() to re-establish window position
